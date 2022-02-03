@@ -60,21 +60,16 @@ class XGenImageEmbedding(nn.Module):
         if num_channels is not None:
             config.num_channels = num_channels
 
-        encoder = ViTEncoder(config)
-        self.embedding = encoder.embeddings
-        self.patch_embeddings = encoder.get_input_embeddings()
-        self.keep_frac = keep_frac
+        self.encoder = ViTEncoder(config)
+        self.embedding = self.encoder.embeddings
 
     def forward(self, image: Tensor) -> Tensor:
         if image.dim() == 5:
             image = image.permute(1, 0, 2, 3, 4).flatten(start_dim=0, end_dim=1)
-        embeddings = self.embedding(image)
-        # now mask out 1 - keep_frac tokens
 
-        # pass the preserved tokens through the encoder
+        img_embeddings = self.embedding(image)
 
-        
-        return self.embedding(image)
+        return img_embeddings
 
 class XGenTextEmbedding(nn.Module):
     def __init__(
@@ -99,8 +94,10 @@ class XGenTextEmbedding(nn.Module):
         text_encoder = TransformerEncoder(config)
         self.text_embeddings = text_encoder.embeddings
 
+
     def forward(self, input_ids: Tensor, segment_ids: Tensor) -> Tensor:
-        return self.text_embeddings(input_ids, token_type_ids=segment_ids)
+        text_embedding = self.text_embeddings(input_ids, token_type_ids=segment_ids)
+        return text_embedding 
 
 
 @registry.register_model("xgen")

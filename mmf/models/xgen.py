@@ -15,7 +15,13 @@ from mmf.utils.modeling import get_bert_configured_parameters
 from omegaconf import MISSING, OmegaConf
 from torch import Tensor, nn
 
-class ImageEmbedding(nn.Module):
+# mmf_run config="configs/experiments/cross_gen/defaults.yaml" \
+#     model=cross_gen \
+#     dataset=hateful_memes \
+#     run_type=train_val
+
+
+class XGenImageEmbedding(nn.Module):
     """
     Patch embedding used for ViLT.
     https://arxiv.org/pdf/2102.03334.pdf
@@ -35,6 +41,7 @@ class ImageEmbedding(nn.Module):
         hidden_size: Optional[int] = None,
         patch_size: Optional[int] = None,
         num_channels: Optional[int] = None,
+        keep_frac: Optional[float] = 0.25,
         *args,
         **kwargs
     ):
@@ -55,25 +62,21 @@ class ImageEmbedding(nn.Module):
 
         encoder = ViTEncoder(config)
         self.embedding = encoder.embeddings
-        hidden_size = encoder.hf_config.hidden_size
-        self.token_type_embeddings = nn.Embedding(2, hidden_size)
+        self.patch_embeddings = encoder.get_input_embeddings()
+        self.keep_frac = keep_frac
 
     def forward(self, image: Tensor) -> Tensor:
         if image.dim() == 5:
             image = image.permute(1, 0, 2, 3, 4).flatten(start_dim=0, end_dim=1)
+        embeddings = self.embedding(image)
+        # now mask out 1 - keep_frac tokens
 
-        img_embeddings = self.embedding(image)
+        # pass the preserved tokens through the encoder
 
-        img_segment_ids = torch.ones(
-            img_embeddings.size()[:-1],
-            dtype=img_embeddings.dtype,
-            device=img_embeddings.device,
-        ).long()
-        img_type_embed = self.token_type_embeddings(img_segment_ids)
-        img_embeddings = img_embeddings + img_type_embed
-        return img_embeddings
+        
+        return self.embedding(image)
 
-class TextEmbedding(nn.Module):
+class XGenTextEmbedding(nn.Module):
     def __init__(
         self,
         random_init: bool = True,
@@ -95,36 +98,26 @@ class TextEmbedding(nn.Module):
 
         text_encoder = TransformerEncoder(config)
         self.text_embeddings = text_encoder.embeddings
-        # the hidden_size param enables hidden_size overrides
-        # if hidden_size is None, hidden_size is loaded
-        # from the default hf config for the model
-        # the actual size of the embeddings will always be in the encoder configs
-        hidden_size = text_encoder.config.hidden_size
-        self.token_type_embeddings = nn.Embedding(2, hidden_size)
 
     def forward(self, input_ids: Tensor, segment_ids: Tensor) -> Tensor:
-        text_embedding = self.text_embeddings(input_ids, token_type_ids=segment_ids)
-        # official vilt repo adds type embeddings twice, once in the bert embeddings
-        # and a separate time directly
-        text_type_embed = self.token_type_embeddings(segment_ids)
-        return text_embedding + text_type_embed
+        return self.text_embeddings(input_ids, token_type_ids=segment_ids)
 
 
-@registry.register_model("cross_gen")
-class ViLT(BaseModel):
+@registry.register_model("xgen")
+class XGen(BaseModel):
     @dataclass
     class Config(BaseModel.Config):
-        name: str = "ViLT"
+        name: str = "XGen"
         text_embeddings: Any = MISSING
         image_encoder: Any = MISSING
 
     @classmethod
     def config_path(cls):
-        return "configs/models/cross_gen/defaults.yaml"
+        return "configs/models/xgen/defaults.yaml"
 
     def build(self):
-        self.text_embeddings = TextEmbedding(**self.config.text_embeddings)
-        self.image_embeddings = ImageEmbedding(**self.config.image_encoder.params)
+        self.text_embeddings = XGenTextEmbedding(**self.config.text_embeddings)
+        self.image_embeddings = XGenImageEmbedding(**self.config.image_encoder.params)
         self.encoder = build_encoder(self.config.image_encoder)
 
         head_configs = self.config.get("heads", {})

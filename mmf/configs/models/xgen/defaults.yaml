@@ -4,7 +4,7 @@ other_configs:
   hidden_size: 768
 
 model_config:
-  vilt:
+  xgen:
     heads:
       test:
         - type: mlp
@@ -35,7 +35,7 @@ model_config:
         mlp_dim: 3072
 
     text_embeddings:
-      type: vilt_text_embedding
+      type: xgen_text_embedding
       bert_model_name: bert-base-uncased
       hidden_dim: ${other_configs.hidden_size}
       hidden_size: 768

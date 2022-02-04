@@ -60,8 +60,15 @@ class XGenImageEmbedding(nn.Module):
         if num_channels is not None:
             config.num_channels = num_channels
 
+        config.do_patch_embeddings = False
         self.encoder = ViTEncoder(config)
         self.embedding = self.encoder.embeddings
+        self.keep_frac = keep_frac 
+      
+        posEmbeddingDomainSize = int((image_size[0] * image_size[1]) // (patch_size**2))
+        self.position_embedding = nn.Parameter(
+            torch.randn(1, posEmbeddingDomainSize, self.encoder.hf_config.hidden_size)
+        )
 
     def forward(self, image: Tensor) -> Tensor:
         if image.dim() == 5:
@@ -69,7 +76,29 @@ class XGenImageEmbedding(nn.Module):
 
         img_embeddings = self.embedding(image)
 
-        return img_embeddings
+        N = img_embeddings.size(1)
+        B = img_embeddings.size(0)
+        S = int(self.keep_frac * (N - 1))
+        # # get the permutation and inverse permutation used to sample S tokens from the input
+
+        perm = torch.cat([torch.zeros((1), dtype=torch.long, device=img_embeddings.device),
+                          torch.randperm(N - 1, device=img_embeddings.device) + 1])
+        # make sure 0 is the first index
+        
+        # mask out tokens
+        invPerm = torch.empty_like(perm)
+        invPerm[perm] = torch.arange(N, device=img_embeddings.device)
+        # # encode the randomly permuted set of input tokens
+        img_embeddings_samples = img_embeddings[:, perm[0:S+1], :] # include cls
+        pos_samples = self.position_embedding[:, perm[1:S+1] - 1, :] # does not include cls
+
+        # pass tokens through encoder
+        pos_embeds = torch.cat([torch.zeros_like(self.position_embedding[:, 0, :].unsqueeze(1)),
+                                pos_samples], dim=1)
+
+        output, _ = self.encoder(img_embeddings_samples + pos_embeds)
+
+        return output
 
 class XGenTextEmbedding(nn.Module):
     def __init__(

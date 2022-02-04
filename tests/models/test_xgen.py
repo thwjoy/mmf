@@ -21,26 +21,40 @@ BERT_VOCAB_SIZE = 30255
 @skip_if_old_transformers(min_version="4.5.0")
 class TestXGenEmbeddings(unittest.TestCase):
     def test_xgen_image_embedding(self):
-        embedding = XGenImageEmbedding()
+        image_size = (224, 224)
+        channels = 3
+        patch_size = 16
+        latent_size = 768
+        num_patches = int((image_size[0] * image_size[1]) // (patch_size**2))
+        mask_ratio = 0.25
+        embedding = XGenImageEmbedding(
+            image_size=image_size,
+            num_channels=channels,
+            patch_size=patch_size,
+            mask_ratio=mask_ratio
+        )
         self.assertTrue(isinstance(embedding, nn.Module))
 
-        image = torch.rand(32, 3, 224, 224)
+        image = torch.rand(32, channels, *image_size)
         output = embedding(image)
-        self.assertEqual(output.shape, torch.Size([32, 197, 768]))
 
-    def test_xgen_image_embedding_pretrained(self):
-        config = {
-            "random_init": False,
-            "patch_size": 32,
-            "pretrained_model_name": "google/vit-base-patch32-384",
-            "image_size": [384, 384],
-        }
-        embedding = XGenImageEmbedding(**config)
-        self.assertTrue(isinstance(embedding, nn.Module))
+        self.assertEqual(output.shape, torch.Size([32,
+                                                   int(mask_ratio * num_patches) + 1,
+                                                   latent_size]))
 
-        image = torch.rand(32, 3, 384, 384)
-        output = embedding(image)
-        self.assertEqual(output.shape, torch.Size([32, 145, 768]))
+    # def test_xgen_image_embedding_pretrained(self):
+    #     config = {
+    #         "random_init": False,
+    #         "patch_size": 32,
+    #         "pretrained_model_name": "google/vit-base-patch32-384",
+    #         "image_size": [384, 384],
+    #     }
+    #     embedding = XGenImageEmbedding(**config)
+    #     self.assertTrue(isinstance(embedding, nn.Module))
+
+    #     image = torch.rand(32, 3, 384, 384)
+    #     output = embedding(image)
+    #     self.assertEqual(output.shape, torch.Size([32, 145, 768]))
 
     def test_xgen_text_embedding(self):
         embedding = XGenTextEmbedding()
@@ -59,7 +73,9 @@ class TestXGenPretrained(unittest.TestCase):
         test_utils.setup_proxy()
         setup_imports()
         model_name = "xgen"
-        args = test_utils.dummy_args(model=model_name, dataset="test")
+        args = test_utils.dummy_args(model=model_name,
+                                     dataset="test")
+
         configuration = Configuration(args)
         config = configuration.get_config()
         model_config = config.model_config[model_name]

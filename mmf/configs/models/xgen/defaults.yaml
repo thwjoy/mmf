@@ -30,6 +30,7 @@ model_config:
         image_size:
         - ${other_configs.image_w}
         - ${other_configs.image_h}
+        patch_size: 16
         hidden_dim: ${other_configs.hidden_size}
         pretrained_model: vit_base_patch16_224
         mlp_dim: 3072

@@ -98,7 +98,7 @@ class XGenImageEmbedding(nn.Module):
 
         output, _ = self.encoder(img_embeddings_samples + pos_embeds)
 
-        return output
+        return output, perm[0:S], invPerm
 
 class XGenTextEmbedding(nn.Module):
     def __init__(
@@ -107,6 +107,7 @@ class XGenTextEmbedding(nn.Module):
         bert_model_name: str = "bert-base-uncased",
         hidden_size: Optional[int] = None,
         max_position_embeddings: Optional[int] = None,
+        keep_frac: Optional[float] = 0.25,
         *args,
         **kwargs
     ):
@@ -120,13 +121,41 @@ class XGenTextEmbedding(nn.Module):
         if max_position_embeddings is not None:
             config.max_position_embeddings = max_position_embeddings
 
-        text_encoder = TransformerEncoder(config)
-        self.text_embeddings = text_encoder.embeddings
+        self.keep_frac = keep_frac
+        self.text_encoder = TransformerEncoder(config)
+        self.text_embeddings = self.text_encoder.embeddings
+
+        self.position_embedding = nn.Parameter(
+            torch.randn(1, config.max_position_embeddings, self.text_encoder.config.hidden_size)
+        )
 
 
     def forward(self, input_ids: Tensor, segment_ids: Tensor) -> Tensor:
         text_embedding = self.text_embeddings(input_ids, token_type_ids=segment_ids)
-        return text_embedding 
+
+        N = text_embedding.size(1)
+        B = text_embedding.size(0)
+        S = int(self.keep_frac * (N - 1))
+        # # get the permutation and inverse permutation used to sample S tokens from the input
+
+        perm = torch.cat([torch.zeros((1), dtype=torch.long, device=text_embedding.device),
+                          torch.randperm(N - 1, device=text_embedding.device) + 1])
+        # make sure 0 is the first index
+        
+        # mask out tokens
+        invPerm = torch.empty_like(perm)
+        invPerm[perm] = torch.arange(N, device=text_embedding.device)
+        # # encode the randomly permuted set of input tokens
+        text_embedding_samples = text_embedding[:, perm[0:S+1], :] # include cls
+        pos_samples = self.position_embedding[:, perm[1:S+1] - 1, :] # does not include cls
+
+        # pass tokens through encoder
+        pos_embeds = torch.cat([torch.zeros_like(self.position_embedding[:, 0, :].unsqueeze(1)),
+                                pos_samples], dim=1)
+
+        output = self.text_encoder.module(None, inputs_embeds=text_embedding_samples + pos_embeds)[0]
+
+        return output
 
 
 @registry.register_model("xgen")

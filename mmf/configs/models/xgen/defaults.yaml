@@ -38,5 +38,30 @@ model_config:
     text_embeddings:
       type: xgen_text_embedding
       bert_model_name: bert-base-uncased
+      max_position_embeddings: 16
       hidden_dim: ${other_configs.hidden_size}
       hidden_size: 768
+
+    joint_encoder:
+      type: vit
+      params:
+        random_init: True
+        do_pooling: false
+        hidden_dropout_prob: 0.1
+        add_pooling_layer: False
+        do_patch_embeddings: False
+        num_hidden_layers: 12
+        num_attention_heads: 12
+        hidden_dim: ${other_configs.hidden_size}
+
+    joint_decoder:
+      type: vit
+      params:
+        random_init: True
+        do_pooling: false
+        hidden_dropout_prob: 0.1
+        add_pooling_layer: False
+        do_patch_embeddings: False
+        num_hidden_layers: 6
+        num_attention_heads: 12
+        hidden_dim: ${other_configs.hidden_size}

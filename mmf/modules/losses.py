@@ -1126,3 +1126,51 @@ class RefinerContrastiveLoss(nn.Module):
             loss = sum(loss) / batch_size
 
         return loss
+
+
+@registry.register_loss("cross_transformative_loss")
+class CrossTransformativeLoss(nn.Module):
+
+    def cross_entropy(targ, pred, mask_text=None, attn_mask=None):
+        loss_ = F.cross_entropy(pred.reshape(-1, pred.size(-1)),
+                                targ.view(-1), reduction='none').reshape(targ.size(0), -1)
+        loss_ = loss_ * attn_mask
+        if mask_text is not None:
+            loss = torch.zeros_like(loss_)
+            loss[:, mask_text] = loss_[:, mask_text]
+            return loss.mean()
+        else:
+            return loss_.mean()
+
+    def __init__(self, loss_fn_a="mse", loss_fn_b="cross_entropy"):
+        super().__init__()
+
+        loss_dict = {
+            "mse": lambda targ, pred: (targ - pred).square().mean(),
+            "cross_entropy": CrossTransformativeLoss.cross_entropy
+        }
+        self.loss_fn_a = loss_dict[loss_fn_a]
+        self.loss_fn_b = loss_dict[loss_fn_b]
+
+
+    def forward(self, sample_list, model_output):
+        loss = 0.0
+        if 'image' in sample_list and 'r_img' in model_output and 'mask_im' in model_output:
+            mask = model_output['mask_im']
+            loss += self.loss_fn_a(sample_list['image'][mask],
+                                   model_output['r_img'][mask])
+        if 'image' in sample_list and 'x_img' in model_output:
+            loss += self.loss_fn_a(sample_list['image'],
+                                   model_output['x_img'])
+        if 'input_ids' in sample_list and 'r_text' in model_output and 'mask_text' in model_output and 'attn_mask' in model_output:
+            loss += self.loss_fn_b(sample_list['input_ids'],
+                                   model_output['r_text'],
+                                   model_output['mask_text'],
+                                   model_output['attn_mask'])
+        if 'input_ids' in sample_list and 'x_text' in model_output and 'attn_mask' in model_output:
+            loss += self.loss_fn_b(sample_list['input_ids'],
+                                   model_output['x_text'],
+                                   None, 
+                                   model_output['attn_mask'])
+        return loss
+

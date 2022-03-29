@@ -11,6 +11,7 @@ from mmf.utils.build import build_model
 from mmf.utils.configuration import Configuration
 from mmf.utils.env import setup_imports, teardown_imports
 from mmf.utils.general import get_current_device
+from mmf.modules.losses import CrossTransformativeLoss
 from tests.test_utils import skip_if_old_transformers
 from torch import nn
 
@@ -110,6 +111,11 @@ class TestXGenEmbeddings(unittest.TestCase):
         self.assertEqual(output['x_img'].shape, sample_list['image'].shape)
         self.assertEqual(output['r_text'].shape[:-1], sample_list['input_ids'].shape)
         self.assertEqual(output['x_text'].shape[:-1], sample_list['input_ids'].shape)
+
+
+        # Loss function
+        loss = CrossTransformativeLoss()
+        loss(sample_list, output)
 
 
 

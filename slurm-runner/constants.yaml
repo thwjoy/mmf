@@ -1,0 +1,12 @@
+# where all experiment data will be saved
+experiment_folder:
+
+# where the datasets are
+# you might not need this here, depending on how your code is structured
+dataset_folder:
+
+# name of conda environment needed to run the experiments
+conda_env:
+
+# slurm logs will be saved in <experiment_folder>/<experiment_group>/<slurm_folder>
+slurm_folder: slurm_logs

@@ -1,0 +1,18 @@
+common: &common --wckey="" --dataset abcde --max_epochs 100 --optimizer Adam
+first: &first --config_names alpha beta gamma
+second: &second --config_names omega zeta
+
+commands:
+- - python launch_one.py --important1 dog --important2 cat
+  - *first
+  - *common
+- - python launch_one.py --important1 zebra --important2 giraffe
+  - *first
+  - *common
+
+- - python launch_one.py --important1 dog --important2 cat
+  - *second
+  - *common
+- - python launch_one.py --important1 zebra --important2 giraffe
+  - *second
+  - *common

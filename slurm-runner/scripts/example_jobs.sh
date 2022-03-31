@@ -1,0 +1,1 @@
+python launch_multiple.py --config dataset1_configs/config1 --cpus-per-task=5 --partition=a100 

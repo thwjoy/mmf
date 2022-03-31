@@ -33,7 +33,7 @@ if __name__ == "__main__":
         type=str,
         default=constants["slurm_folder"],
     )
-    parser.add_argument("--gdrive_folder", type=str, required=True)
+    parser.add_argument("--gdrive_folder", type=str, default="19RHtq1y2tR7tmKdV9oHeocfLPeCcrGkW")
     parser.add_argument("--sleep_time", type=str, default="240m")
     args = parser.parse_args()
     main(args)

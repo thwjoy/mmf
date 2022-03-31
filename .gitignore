@@ -29,3 +29,6 @@ eggs/
 *.so
 *-checkpoint.ipynb
 !tests/data
+
+
+slurm-runner/experiments

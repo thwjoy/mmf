@@ -1,0 +1,11 @@
+common: &common --model xgen --config_path ../projects/xtransform/configs/coco/defaults.yaml --dataset coco
+first: &first --name test_multi_1
+second: &second --name test_multi_2
+
+commands:
+- - python launch_one.py 
+  - *first
+  - *common
+- - python launch_one.py
+  - *second
+  - *common

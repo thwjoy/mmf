@@ -29,9 +29,14 @@ def rotate(l, n):
 
 # The command (in string form) for running an experiment
 def base_command(config_name, experiment_path, cfg):
-    return f"python main.py --dataset {cfg.dataset} --max_epochs {cfg.max_epochs} --optimizer {cfg.optimizer} \
---important1 {cfg.important1} --important2 {cfg.important2} --config {config_name} --experiment_path {experiment_path}"
-
+#     return f"python main.py --dataset {cfg.dataset} --max_epochs {cfg.max_epochs} --optimizer {cfg.optimizer} \
+# --important1 {cfg.important1} --important2 {cfg.important2} --config {config_name} --experiment_path {experiment_path}"
+    return f"mmf_run config={cfg.config_path} \
+             dataset={cfg.dataset} \
+             model={cfg.model} \
+             run_type={cfg.run_type} \
+             env.data_dir={cfg.data_dir} \
+             env.save_dir={os.path.join(cfg.root_experiment_folder, cfg.name)}"
 
 # Uses submitit to run experiments using slurm
 def exp_launcher(cfg, experiment_path):
@@ -58,7 +63,7 @@ def exp_launcher(cfg, experiment_path):
 
 
 def main(cfg, slurm_args):
-    experiment_path = os.path.join(cfg.root_experiment_folder, f"{cfg.important1}_{cfg.important2}")
+    experiment_path = os.path.join(cfg.root_experiment_folder, cfg.name)
 
     if already_done(experiment_path, cfg.config_names):
         print("These experiments are already done. Exiting.")
@@ -94,13 +99,16 @@ if __name__ == "__main__":
         "--dataset_folder", type=str, default=constants["dataset_folder"]
     )
     parser.add_argument("--conda_env", type=str, default=constants["conda_env"])
-    parser.add_argument("--config_names", nargs="+", type=str, required=True)
+    parser.add_argument("--config_names", nargs="+", type=str, default=["none"])
     parser.add_argument("--script_wrapper", type=str, default="script_wrapper.sh")
     parser.add_argument("--dataset", type=str, required=True)
-    parser.add_argument("--max_epochs", type=int, required=True)
-    parser.add_argument("--optimizer", type=str, required=True)
-    parser.add_argument("--important1", type=str, required=True)
-    parser.add_argument("--important2", type=str, required=True)
+    parser.add_argument("--config_path", type=str)
+    parser.add_argument("--model", type=str, default="xgen")
+    parser.add_argument("--data_dir", type=str, default="../data")
+    parser.add_argument("--run_type", type=str, default="train_val")
+    # parser.add_argument("--max_epochs", type=int, required=True)
+    # parser.add_argument("--optimizer", type=str, required=True)
+    parser.add_argument("--name", type=str, required=True)
     args, unknown_args = parser.parse_known_args()
 
     slurm_args = {}

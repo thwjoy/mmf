@@ -16,13 +16,38 @@
 
 ---
 
+## Installation for Tom Joy project
+
+```
+conda create -n mmf python=3.7
+conda activate mmf
+pip install --editable .
+pip install submitit
+pip install future
+```
+
+## Run
+
+```
+cd slurm-runner
+python launch_multiple.py --config dataset1_configs/test
+```
+
+## Upload results
+
+```
+cd slurm-runner
+python upload_logs.py
+```
+
+# Can Ignore Below
+
 MMF is a modular framework for vision and language multimodal research from Facebook AI Research. MMF contains reference implementations of state-of-the-art vision and language models and has powered multiple research projects at Facebook AI Research. See full list of project inside or built on MMF [here](https://mmf.sh/docs/notes/projects).
 
 MMF is powered by PyTorch, allows distributed training and is un-opinionated, scalable and fast. Use MMF to **_bootstrap_** for your next vision and language multimodal research project by following the [installation instructions](https://mmf.sh/docs/). Take a look at list of MMF features [here](https://mmf.sh/docs/getting_started/features).
 
 MMF also acts as **starter codebase** for challenges around vision and
 language datasets (The Hateful Memes, TextVQA, TextCaps and VQA challenges). MMF was formerly known as Pythia. The next video shows an overview of how datasets and models work inside MMF. Checkout MMF's [video overview](https://mmf.sh/docs/getting_started/video_overview).
-
 
 ## Installation
 

@@ -54,9 +54,10 @@ class COCODataset(VQA2Dataset):
         for reference in sample_info["reference_tokens"]:
             text_processor_argument = {"tokens": reference}
             processed_reference = self.text_processor(text_processor_argument)
-            reference_list.append(processed_reference["text"])
+            reference_list.append(processed_reference)
 
         # Restrict to minimum reference captions available per image
+        import pdb; pdb.set_trace()
         sample.answers = torch.stack(reference_list)[: self.config.min_captions_per_img]
 
         return sample

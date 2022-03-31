@@ -5,19 +5,6 @@ other_configs:
 
 model_config:
   xgen:
-    heads:
-      test:
-        - type: mlp
-          loss: test_mlp
-          freeze: false
-          lr_multiplier: 1.0
-          in_dim: 768
-          hidden_size: 1536
-          num_labels: 3129
-          pooler_name: bert_pooler
-    losses:
-      test_mlp: logit_bce
-
     image_encoder:
       type: vit
       params:

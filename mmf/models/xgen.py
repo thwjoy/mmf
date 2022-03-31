@@ -240,6 +240,8 @@ class XGen(BaseModel):
         return perm, invPerm
 
     def forward(self, sample_list):
+        import pdb; pdb.set_trace()
+        
         text_embedding = self.text_embeddings(
             sample_list["input_ids"], sample_list["segment_ids"]
         )

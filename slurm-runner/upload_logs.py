@@ -10,7 +10,7 @@ def main(cfg):
 
     command = "bash -i ./scripts/upload_logs.sh {0} {1} {2} {3} {4}".format(
         cfg.root_experiment_folder,
-        cfg.slurm_folder,
+        None,
         cfg.gdrive_folder,
         cfg.sleep_time,
         curr_dir,
@@ -28,11 +28,11 @@ if __name__ == "__main__":
         type=str,
         default=constants["experiment_folder"],
     )
-    parser.add_argument(
-        "--slurm_folder",
-        type=str,
-        default=constants["slurm_folder"],
-    )
+    # parser.add_argument(
+    #     "--slurm_folder",
+    #     type=str,
+    #     default=constants["slurm_folder"],
+    # )
     parser.add_argument("--gdrive_folder", type=str, default="19RHtq1y2tR7tmKdV9oHeocfLPeCcrGkW")
     parser.add_argument("--sleep_time", type=str, default="240m")
     args = parser.parse_args()

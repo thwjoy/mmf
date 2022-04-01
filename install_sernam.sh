@@ -1,6 +1,6 @@
 #!/bin/bash
-conda create -n mmf python=3.7
-conda activate mmf
+conda create -n mmf_4 python=3.7
+conda activate mmf_4
 pip install --editable .
 pip install submitit
 pip install future

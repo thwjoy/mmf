@@ -36,13 +36,15 @@ class COCODataset(VQA2Dataset):
             )
 
         current_sample.image_id = object_to_byte_tensor(sample_info["image_id"])
-
+        
         if self._use_features:
             features = self.features_db[idx]
             current_sample.update(features)
         else:
             image_path = str(sample_info["image_name"]) + ".jpg"
             current_sample.image = self.image_db.from_path(image_path)["images"][0]
+
+        current_sample.targets = None
 
         # Add reference captions to sample
         current_sample = self.add_reference_caption(sample_info, current_sample)
@@ -57,10 +59,9 @@ class COCODataset(VQA2Dataset):
             reference_list.append(processed_reference)
 
         # Restrict to minimum reference captions available per image
-        import pdb; pdb.set_trace()
-        sample.answers = torch.stack(reference_list)[: self.config.min_captions_per_img]
+        # sample.answers = torch.stack(reference_list)[: self.config.min_captions_per_img]
 
-        return sample
+        return {**sample, **reference_list[0]}
 
     def format_for_prediction(self, report):
         captions = report.captions.tolist()

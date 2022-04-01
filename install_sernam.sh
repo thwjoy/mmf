@@ -4,3 +4,4 @@ conda activate mmf
 pip install --editable .
 pip install submitit
 pip install future
+pip install pyyaml

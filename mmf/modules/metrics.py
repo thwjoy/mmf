@@ -47,6 +47,7 @@ Example config for above metric::
 import collections
 import warnings
 from typing import Dict
+import os
 
 import torch
 from mmf.common.registry import registry
@@ -60,6 +61,8 @@ from sklearn.metrics import (
     roc_auc_score,
 )
 from torch import Tensor
+import torchvision
+
 
 
 def _convert_to_one_hot(expected, output):
@@ -1386,3 +1389,51 @@ class DetectionMeanAP(BaseMetric):
         if execute_on_master_only:
             mAP = broadcast_tensor(mAP, src=0)
         return mAP
+
+
+@registry.register_metric("xgen")
+class XGenMetric(BaseMetric):
+    def __init__(self, *args, **kwargs):
+        super().__init__("xgen")
+        self.config = kwargs
+
+    @staticmethod
+    def prep_images(I, Imask, Ipred):
+        Imask = Imask.squeeze(0).expand(I.shape)
+        Iin = torch.where(Imask, torch.zeros_like(I), I)
+        Ipred = torch.where(Imask, Ipred, I)
+        mean = torch.tensor([0.485, 0.456, 0.406])
+        std = torch.tensor([0.229, 0.224, 0.225])
+        unnormalize = torchvision.transforms.Normalize((-mean / std).tolist(), (1.0 / std).tolist())
+        return unnormalize(I), unnormalize(Iin), unnormalize(Ipred)
+
+
+    def calculate(self, sample_list, model_output, *args, **kwargs):
+        Im, Iin, Ipred = XGenMetric.prep_images(sample_list['image'],
+                                 model_output['mask_im'],
+                                 model_output['r_img'])
+
+        _, _, Icross = XGenMetric.prep_images(sample_list['image'],
+                                torch.ones_like(model_output['mask_im']),
+                                model_output['x_img'])
+
+        # text_decoded = loader_test.dataset.tokenizer.batch_decode(sample_list['text']['input_ids'])
+        # recon_decoded = loader_test.dataset.tokenizer.batch_decode(model_output['r_text'].argmax(dim=-1))
+        # gen_decoded = loader_test.dataset.tokenizer.batch_decode(model_output['x_text'].argmax(dim=-1))
+
+        # with open(os.path.join(config.save_dir, "language.txt"), 'w') as f:
+            # f.write('#' * 100 + '\r')
+        
+        os.makedirs(self.config['save_dir'], exist_ok=True)
+
+        for i in range(sample_list['image'][:10].size(0)):
+            torchvision.utils.save_image(Im[i], os.path.join(self.config['save_dir'], "orig_image_%i.png" % i))
+            torchvision.utils.save_image(Ipred[i].float(), os.path.join(self.config['save_dir'], "recon_%i.png" % i))
+            torchvision.utils.save_image(Iin[i].float(), os.path.join(self.config['save_dir'], "mask_%i.png" % i))
+            torchvision.utils.save_image(Icross[i].float(), os.path.join(self.config['save_dir'], "cross_%i.png" % i))
+                # f.write("%s\r" % text_decoded[i])
+                # f.write("%s\r" % recon_decoded[i])
+                # f.write("%s\r" % gen_decoded[i]) 
+                # f.write('#' * 100 + '\r')
+
+        return -1.0

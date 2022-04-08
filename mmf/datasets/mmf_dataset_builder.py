@@ -124,6 +124,7 @@ class MMFDatasetBuilder(BaseDatasetBuilder):
 
     def load(self, config, dataset_type, *args, **kwargs):
         self.config = config
+        import pdb; pdb.set_trace()
 
         split_dataset_from_train = self.config.get("split_train", False)
         if split_dataset_from_train:
@@ -139,6 +140,7 @@ class MMFDatasetBuilder(BaseDatasetBuilder):
             dataset = dataset_class(config, dataset_type, imdb_idx)
             datasets.append(dataset)
 
+        import pdb; pdb.set_trace()
         dataset = MMFConcatDataset(datasets)
         if split_dataset_from_train:
             dataset = self._split_dataset_from_train(dataset, dataset_type)

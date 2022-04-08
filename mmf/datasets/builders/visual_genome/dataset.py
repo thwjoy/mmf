@@ -28,16 +28,16 @@ class VisualGenomeDataset(VQA2Dataset):
         self._no_unk = config.get("no_unk", False)
         self.scene_graph_db = None
 
-        build_scene_graph_db = (
-            self._return_scene_graph
-            or self._return_objects
-            or self._return_relationships
-        )
-
-        if build_scene_graph_db:
-            scene_graph_file = config.scene_graph_files[dataset_type][imdb_file_index]
-            scene_graph_file = self._get_absolute_path(scene_graph_file)
-            self.scene_graph_db = SceneGraphDatabase(config, scene_graph_file)
+        # build_scene_graph_db = (
+        #     self._return_scene_graph
+        #     or self._return_objects
+        #     or self._return_relationships
+        # )
+        # 
+        # if build_scene_graph_db:
+        #     scene_graph_file = config.scene_graph_files[dataset_type][imdb_file_index]
+        #     scene_graph_file = self._get_absolute_path(scene_graph_file)
+        #     self.scene_graph_db = SceneGraphDatabase(config, scene_graph_file)
 
     def load_item(self, idx):
         sample_info = self.annotation_db[idx]

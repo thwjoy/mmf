@@ -94,7 +94,7 @@ class VQA2Dataset(MMFDataset):
                 )
             current_sample.update(features)
         else:
-            image_path = sample_info["image_name"] + ".jpg"
+            image_path = str(sample_info["image_id"]) + ".jpg"
             current_sample.image = self.image_db.from_path(image_path)["images"][0]
 
         # Add details for OCR like OCR bbox, vectors, tokens here

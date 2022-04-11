@@ -8,6 +8,7 @@ class BatchCollator:
         self._dataset_type = dataset_type
 
     def __call__(self, batch):
+        batch = list(filter(lambda x: x is not None, batch))
         sample_list = convert_batch_to_sample_list(batch)
         sample_list.dataset_name = self._dataset_name
         sample_list.dataset_type = self._dataset_type

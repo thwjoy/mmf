@@ -1,17 +1,47 @@
 # Copyright (c) Facebook, Inc. and its affiliates.
 
-from mmf.datasets.builders.coco import MaskedCOCODataset
+from mmf.datasets.base_dataset import BaseDataset
+from mmf.common.sample import Sample
 
+from PIL import Image
+import requests
+from io import BytesIO
+import pandas as pd
+import os
 
-class MaskedConceptualCaptions12Dataset(MaskedCOCODataset):
-    def __init__(self, config, dataset_type, imdb_file_index, *args, **kwargs):
-        import pdb; pdb.set_trace()
+class MaskedConceptualCaptions12Dataset(BaseDataset):
+    def __init__(self, config, dataset, imdb_file_index, *args, **kwargs):
+        if "name" in kwargs:
+            name = kwargs["name"]
+        elif "dataset_name" in kwargs:
+            name = kwargs["dataset_name"]
+        else:
+            name = "masked_conceptual_captions_12"
+        super().__init__(name, config, dataset, index=imdb_file_index)
+        self.data = pd.read_table(os.path.join(config.data_dir, config.features))        
 
-        # HERE we need to make sure this datset works properly 
-        
-        super().__init__(config, dataset_type, imdb_file_index, *args, **kwargs)
-        self.dataset_name = "masked_conceptual_captions_12"
-        self._two_sentence = config.get("two_sentence", True)
-        self._false_caption = config.get("false_caption", True)
-        self._two_sentence_probability = config.get("two_sentence_probability", 0.5)
-        self._false_caption_probability = config.get("false_caption_probability", 0.5)
+    def init_processors(self):
+        super().init_processors()
+
+    def __getitem__(self, idx):
+        current_sample = Sample()
+        row = self.data.iloc[idx]
+        url, caption = row[0], row[1]
+        caption_data = {"text": caption}
+        try:
+            response = requests.get(url)
+            img = Image.open(BytesIO(response.content))
+            current_sample.image = self.image_processor(img)
+        except:
+            return None
+        processed_question = self.text_processor(caption_data)
+        current_sample.text = processed_question["text"]
+        if "input_ids" in processed_question:
+            current_sample.update(processed_question)
+
+        return current_sample
+
+    
+    def __len__(self):
+        return len(self.data)
+

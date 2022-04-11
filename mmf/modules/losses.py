@@ -106,14 +106,14 @@ class Losses(nn.Module):
 
         """
         output = {}
-        if "targets" not in sample_list:
-            if not self._evaluation_predict:
-                warnings.warn(
-                    "Sample list has not field 'targets', are you "
-                    "sure that your ImDB has labels? you may have "
-                    "wanted to run with evaluation.predict=true"
-                )
-            return output
+        # if "targets" not in sample_list:
+        #     if not self._evaluation_predict:
+        #         warnings.warn(
+        #             "Sample list has not field 'targets', are you "
+        #             "sure that your ImDB has labels? you may have "
+        #             "wanted to run with evaluation.predict=true"
+        #         )
+        #     return output
 
         for loss in self.losses:
             output.update(loss(sample_list, model_output))
@@ -1144,14 +1144,12 @@ class CrossTransformativeLoss(nn.Module):
 
     def __init__(self, loss_fn_a="mse", loss_fn_b="cross_entropy"):
         super().__init__()
-
         loss_dict = {
             "mse": lambda targ, pred: (targ - pred).square().mean(),
             "cross_entropy": CrossTransformativeLoss.cross_entropy
         }
         self.loss_fn_a = loss_dict[loss_fn_a]
         self.loss_fn_b = loss_dict[loss_fn_b]
-
 
     def forward(self, sample_list, model_output):
         loss = 0.0

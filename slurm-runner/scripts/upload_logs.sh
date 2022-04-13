@@ -9,7 +9,7 @@ do
     echo "Zipping files"
     # finds all *.err and *.out files and zips them
     # find -maxdepth 4 -name *.err -o -name *.out | zip -rv all_logs -@
-    zip -r all_logs.zip . 
+    zip -r all_logs.zip . -x "*.ckpt*"
     echo "Deleting existing files"
     gdrive list -q "'$3' in parents" --no-header --max 0 | cut -d" " -f1 - | xargs -L 1 gdrive delete
     echo "Starting upload $3"

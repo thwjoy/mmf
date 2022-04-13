@@ -45,6 +45,5 @@ class COCOBuilder(VQA2Builder):
             self.dataset_class = TextCapsDataset
 
         dataset = super().load(config, *args, **kwargs)
-        import pdb; pdb.set_trace()
         dataset.dataset_name = self.dataset_name
         return dataset

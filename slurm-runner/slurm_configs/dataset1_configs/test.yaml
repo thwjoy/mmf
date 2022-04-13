@@ -1,11 +1,11 @@
-common: &common --model xgen --config_path ../projects/xtransform/configs/coco/defaults.yaml --dataset coco
-first: &first --name test_multi_1
+common: &common --model xgen --config_path ../projects/xtransform/configs/coco/defaults.yaml --dataset coco,masked_conceptual_captions_12,visual_genome,masked_sbu --gres=gpu:8
+first: &first --name test_all
 second: &second --name test_multi_2
 
 commands:
 - - python launch_one.py 
   - *first
   - *common
-- - python launch_one.py
-  - *second
-  - *common
+# - - python launch_one.py
+#   - *second
+#   - *common

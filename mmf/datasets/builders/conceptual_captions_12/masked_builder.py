@@ -9,6 +9,7 @@ from mmf.utils.general import get_mmf_root
 from .masked_dataset import MaskedConceptualCaptions12Dataset
 
 import os
+import wget
 
 logger = logging.getLogger(__name__)
 
@@ -26,15 +27,14 @@ class MaskedConceptualCaptions12Builder(MMFDatasetBuilder):
             config.data_dir, "cc12"
         )
 
+        
         file_name = self.download_url.split("/")[-1]
         local_filename = os.path.join(download_folder, file_name)
 
-        # Either if the zip file is already present or if there are some
-        # files inside the folder we don't continue download process
-        if os.path.exists(local_filename):
-            return
-
-        raise Exception("You need to download %s into the folder %s" % (self.download_url, download_folder))
+        if not os.path.exists(local_filename):
+            os.makedirs(download_folder, exist_ok=True)
+            wget.download(self.download_url, out=download_folder)
+        
 
 
     def load(self, config, dataset, *args, **kwargs):

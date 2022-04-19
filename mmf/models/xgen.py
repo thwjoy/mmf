@@ -10,7 +10,7 @@ from mmf.models.base_model import BaseModel
 from mmf.models.transformers.heads.utils import build_heads_dict
 from mmf.modules.encoders import TransformerEncoder, ViTEncoder
 from mmf.modules.losses import MMFLoss
-from mmf.utils.build import build_encoder
+from mmf.utils.build import build_encoder, build_classifier_layer
 from mmf.utils.modeling import get_bert_configured_parameters
 from omegaconf import MISSING, OmegaConf
 import numpy as np
@@ -219,6 +219,10 @@ class XGen(BaseModel):
 
         self.tokens2text = torch.nn.Linear(self.config.joint_encoder.params.hidden_dim, vocab_size)
 
+        # build network head
+        if "classifier" in self.config:
+            self.classifier = build_classifier_layer(self.config.classifier)
+
         # head_configs = self.config.get("heads", {})
         # self.tasks = self.config.get("tasks", head_configs.keys())
         # if isinstance(self.tasks, str):
@@ -287,13 +291,21 @@ class XGen(BaseModel):
 
         mask_im = self.imageMask(perm_im[:s_im], self.im_shape, r_img.device).expand(bs, -1, -1, -1)
 
+        # perfom head
+        scores = None
+        if "classifier" in self.config:
+            sequence, _ = self.joint_encoder(embeddings, attention_mask=attention_mask_im)
+            scores = self.classifier(sequence[:, 0, :])
+            import pdb; pdb.set_trace()
+
         return {'r_img': r_img, 
                 'r_text': r_text,
                 'x_img': x_img, 
                 'x_text': x_text,
                 'mask_im': mask_im,
                 'mask_text': perm_text[s_text:],
-                'attn_mask': sample_list['input_mask']}
+                'attn_mask': sample_list['input_mask'],
+                'scores': scores}
                 # 'feats_text': self.proj_text(tokens_enc_text.mean(0)),
                 # 'feats_im': self.proj_im(tokens_enc_img.mean(0))}
 

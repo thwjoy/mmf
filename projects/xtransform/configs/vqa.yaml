@@ -1,0 +1,60 @@
+model_config:
+  xgen:
+    training_head_type: classification
+    num_labels: 3129
+    losses:
+    - type: cross_entropy
+    classifier:
+      type: mlp
+      params:
+        # 128 + 768 in case of features
+        # Modal_Dim * Number of embeddings + Text Dim
+        in_dim: 768
+        out_dim: ${model_config.xgen.num_labels}
+        hidden_dim: 768
+        num_layers: 2
+
+dataset_config:
+  vqa2:
+    return_features_info: true
+    use_images: true
+    use_features: false
+    processors:
+      text_processor:
+        type: bert_tokenizer
+        params:
+          tokenizer_config:
+            type: bert-base-uncased
+            params:
+              do_lower_case: true
+          mask_probability: 0
+          max_seq_length: 128
+
+optimizer:
+  type: adam_w
+  params:
+    lr: 5e-5
+    eps: 1e-8
+
+scheduler:
+  type: warmup_linear
+  params:
+    num_warmup_steps: 6000
+    num_training_steps: 60000
+
+evaluation:
+  metrics:
+  - vqa_accuracy
+
+training:
+  batch_size: 480
+  lr_scheduler: true
+  # Don't forget to update schedule_attributes if you update this
+  max_updates: 60000
+  early_stop:
+    criteria: vqa2/vqa_accuracy
+    minimize: false
+
+# checkpoint:
+#   pretrained_state_mapping:
+#     model.bert: model.bert

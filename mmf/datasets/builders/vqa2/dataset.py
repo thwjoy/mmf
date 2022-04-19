@@ -55,7 +55,6 @@ class VQA2Dataset(MMFDataset):
     def load_item(self, idx):
         sample_info = self.annotation_db[idx]
         current_sample = Sample()
-
         if "question_tokens" in sample_info:
             text_processor_argument = {
                 "tokens": sample_info["question_tokens"],
@@ -94,14 +93,14 @@ class VQA2Dataset(MMFDataset):
                 )
             current_sample.update(features)
         else:
-            image_path = str(sample_info["image_id"]) + ".jpg"
+            image_path = sample_info["image_name"] + ".jpg"
             current_sample.image = self.image_db.from_path(image_path)["images"][0]
 
         # Add details for OCR like OCR bbox, vectors, tokens here
         current_sample = self.add_ocr_details(sample_info, current_sample)
         # Depending on whether we are using soft copy this can add
         # dynamic answer space
-        current_sample = self.add_answer_info(sample_info, current_sample)
+        current_sample = self.add_answer_info(sample_info, current_sample)    
         return current_sample
 
     def add_ocr_details(self, sample_info, sample):
@@ -140,7 +139,7 @@ class VQA2Dataset(MMFDataset):
             processed_soft_copy_answers = self.answer_processor(answer_processor_arg)
 
             # sample.answers = processed_soft_copy_answers["answers"]
-            sample.targets = processed_soft_copy_answers["answers_scores"]
+            sample.targets = processed_soft_copy_answers["answers_indices"][0] # Remove for more data
 
         return sample
 

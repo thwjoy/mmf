@@ -296,7 +296,6 @@ class XGen(BaseModel):
         if "classifier" in self.config:
             sequence, _ = self.joint_encoder(embeddings, attention_mask=attention_mask_im)
             scores = self.classifier(sequence[:, 0, :])
-            import pdb; pdb.set_trace()
 
         return {'r_img': r_img, 
                 'r_text': r_text,

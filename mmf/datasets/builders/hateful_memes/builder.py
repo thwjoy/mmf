@@ -12,6 +12,7 @@ from mmf.datasets.mmf_dataset_builder import MMFDatasetBuilder
 from mmf.utils.configuration import get_mmf_env
 from mmf.utils.file_io import PathManager
 from mmf.utils.general import get_absolute_path
+import mmf.utils.download as download
 
 
 @registry.register_builder("hateful_memes")
@@ -54,10 +55,20 @@ class HatefulMemesBuilder(MMFDatasetBuilder):
             )
         )
         # NOTE: This doesn't check for files, but that is a fine assumption for now
-        assert PathManager.exists(test_path), (
-            "Hateful Memes Dataset doesn't do automatic downloads; please "
-            + "follow instructions at https://fb.me/hm_prerequisites"
-        )
+        if not PathManager.exists(test_path):
+            download_path = get_absolute_path(
+                os.path.join(
+                    data_dir,
+                    "datasets",
+                    self.dataset_name
+                )
+            )
+            os.makedirs(download_path, exist_ok=True)
+            file_obj = download.DownloadableFile(
+                url="https://drive.google.com/uc?export=download&id=1AWxwlcc70QzRzLbBGOfJWL4AS74Oe2ft",
+                file_name="hateful_memes.zip"
+            )
+            file_obj.download_file(download_path)
         super().build(config, *args, **kwargs)
 
     def update_registry_for_model(self, config):

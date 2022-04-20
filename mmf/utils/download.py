@@ -18,6 +18,7 @@ import os
 import shutil
 import time
 from pathlib import Path
+import gdown
 
 import numpy as np
 import requests
@@ -144,7 +145,6 @@ class DownloadableFile:
             # File exists but checksum has changed. Will be redownloaded
             print(f"[ Checksum changed for {download_path}. Redownloading]")
             redownload = True
-
         if self._from_google:
             downloaded = download_from_google_drive(
                 self._url,
@@ -382,7 +382,6 @@ def download_pretrained_model(model_name, *args, **kwargs):
 
 def download_resources(resources, download_path, version):
     is_built = built(download_path, version_string=version)
-
     if not is_built:
         make_dir(download_path)
 
@@ -460,38 +459,69 @@ def _get_confirm_token(response):
     return None
 
 
+# def download_from_google_drive(gd_id, destination, redownload=True):
+#     """
+#     Use the requests package to download a file from Google Drive.
+#     """
+#     download = not PathManager.isfile(destination) or redownload
+
+#     URL = "https://docs.google.com/uc?export=download"
+#     if not download:
+#         return download
+#     else:
+#         # Check first if link is live
+#         check_header(gd_id, from_google=True)
+
+#     with requests.Session() as session:
+#         import pdb; pdb.set_trace()
+#         response = session.get(URL, params={"id": gd_id}, stream=True)
+#         token = _get_confirm_token(response)
+
+#         if token:
+#             response.close()
+#             params = {"id": gd_id, "confirm": token}
+#             response = session.get(URL, params=params, stream=True)
+
+#         CHUNK_SIZE = 32768
+#         with PathManager.open(destination, "wb") as f:
+#             for chunk in response.iter_content(CHUNK_SIZE):
+#                 if chunk:  # filter out keep-alive new chunks
+#                     f.write(chunk)
+#         response.close()
+
+#     return download
+
 def download_from_google_drive(gd_id, destination, redownload=True):
     """
     Use the requests package to download a file from Google Drive.
     """
     download = not PathManager.isfile(destination) or redownload
 
-    URL = "https://docs.google.com/uc?export=download"
-
+    url="https://drive.google.com/uc?id={}".format(gd_id)
     if not download:
         return download
-    else:
-        # Check first if link is live
-        check_header(gd_id, from_google=True)
 
-    with requests.Session() as session:
-        response = session.get(URL, params={"id": gd_id}, stream=True)
-        token = _get_confirm_token(response)
+    gdown.download(id=gd_id, output=destination, quiet=False)
+    return os.path.exists(destination)
 
-        if token:
-            response.close()
-            params = {"id": gd_id, "confirm": token}
-            response = session.get(URL, params=params, stream=True)
+    # with requests.Session() as session:
+    #     import pdb; pdb.set_trace()
+    #     response = session.get(URL, params={"id": gd_id}, stream=True)
+    #     token = _get_confirm_token(response)
 
-        CHUNK_SIZE = 32768
-        with PathManager.open(destination, "wb") as f:
-            for chunk in response.iter_content(CHUNK_SIZE):
-                if chunk:  # filter out keep-alive new chunks
-                    f.write(chunk)
-        response.close()
+    #     if token:
+    #         response.close()
+    #         params = {"id": gd_id, "confirm": token}
+    #         response = session.get(URL, params=params, stream=True)
 
-    return download
+    #     CHUNK_SIZE = 32768
+    #     with PathManager.open(destination, "wb") as f:
+    #         for chunk in response.iter_content(CHUNK_SIZE):
+    #             if chunk:  # filter out keep-alive new chunks
+    #                 f.write(chunk)
+    #     response.close()
 
+    # return download
 
 def get_image_from_url(url):
     response = requests.get(url)

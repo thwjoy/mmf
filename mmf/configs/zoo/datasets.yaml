@@ -277,8 +277,8 @@ flickr30k:
         file_name: test.txt
         compressed: false
       images:
-      - url: https://drive.google.com/uc?export=download&id=0B_PL6p-5reUAZEM4MmRQQ2VVSlk
-        file_name: flickr30_images.tar.gz
+      - url: https://drive.google.com/uc?export=download&id=1RCz_sjRZGn9LUMBXrvNluwyYN027os06
+        file_name: flickr30_images.zip
       features:
       - url: mmf://datasets/flickr30k/defaults/features/features.tar.gz
         file_name: features.tar.gz

@@ -56,10 +56,16 @@ class VQA2Dataset(MMFDataset):
         sample_info = self.annotation_db[idx]
         current_sample = Sample()
         if "question_tokens" in sample_info:
-            text_processor_argument = {
-                "tokens": sample_info["question_tokens"],
-                "text": sample_info["question_str"],
-            }
+            if "question_str" in sample_info:
+                text_processor_argument = {
+                    "tokens": sample_info["question_tokens"],
+                    "text": sample_info["question_str"],
+                }
+            else:
+                text_processor_argument = {
+                    "tokens": sample_info["question_tokens"],
+                    "text": sample_info["question"],
+                }
         else:
             text_processor_argument = {"text": sample_info["question"]}
 
@@ -93,7 +99,11 @@ class VQA2Dataset(MMFDataset):
                 )
             current_sample.update(features)
         else:
-            image_path = sample_info["image_name"] + ".jpg"
+            # import pdb; pdb.set_trace()
+            if self.name == 'coco':
+                image_path = "COCO_%s2015_000000%i.jpg" % (self._dataset_type, sample_info["image_id"])
+            else: #if self.name == 'visual_genome':
+                image_path = str(sample_info["image_id"]) + ".jpg"
             current_sample.image = self.image_db.from_path(image_path)["images"][0]
 
         # Add details for OCR like OCR bbox, vectors, tokens here

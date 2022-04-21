@@ -1,0 +1,8 @@
+includes:
+  - projects/xtransform/configs/defaults.yaml
+
+model_config:
+  xgen:
+    losses:
+    - contrastive_loss
+

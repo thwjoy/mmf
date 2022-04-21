@@ -118,6 +118,29 @@ class XGenImageEmbedding(nn.Module):
 
         # return output, perm[0:S], invPerm
 
+class ProjectionHead(torch.nn.Module):
+    def __init__(
+        self,
+        embedding_dim,
+        projection_dim=256,
+        dropout=0.1
+    ):
+        super().__init__()
+        self.projection = nn.Linear(embedding_dim, projection_dim)
+        self.gelu = nn.GELU()
+        self.fc = nn.Linear(projection_dim, projection_dim)
+        self.dropout = nn.Dropout(dropout)
+        self.layer_norm = nn.LayerNorm(projection_dim)
+    
+    def forward(self, x):
+        projected = self.projection(x)
+        x = self.gelu(projected)
+        x = self.fc(x)
+        x = self.dropout(x)
+        x = x + projected
+        x = self.layer_norm(x)
+        return x
+
 class XGenTextEmbedding(nn.Module):
     def __init__(
         self,
@@ -219,6 +242,10 @@ class XGen(BaseModel):
 
         self.tokens2text = torch.nn.Linear(self.config.joint_encoder.params.hidden_dim, vocab_size)
 
+        self.proj_im = ProjectionHead(self.config.joint_encoder.params.hidden_dim)
+        self.proj_text = ProjectionHead(self.config.joint_encoder.params.hidden_dim)
+        self.log_temp = nn.Parameter(torch.tensor(0.0)) # init to t = 1
+
         # build network head
         if "classifier" in self.config:
             self.classifier = build_classifier_layer(self.config.classifier)
@@ -304,9 +331,10 @@ class XGen(BaseModel):
                 'mask_im': mask_im,
                 'mask_text': perm_text[s_text:],
                 'attn_mask': sample_list['input_mask'],
-                'scores': scores}
-                # 'feats_text': self.proj_text(tokens_enc_text.mean(0)),
-                # 'feats_im': self.proj_im(tokens_enc_img.mean(0))}
+                'scores': scores,
+                'embedding_1': self.proj_text(sequence_im.mean(1)),
+                'embedding_2': self.proj_im(sequence_text.mean(1)),
+                'temperature': self.log_temp.exp()}
 
     def imageMask(self, sampleIds, outputSize, device):
         outputSize = tuple(outputSize)

@@ -3,11 +3,6 @@ evaluation:
   - type: xgen
     params: 
       save_dir: ${env.save_dir}
-
-model_config:
-  xgen:
-    losses:
-    - cross_transformative_loss
     
 training:
   max_updates: 100000

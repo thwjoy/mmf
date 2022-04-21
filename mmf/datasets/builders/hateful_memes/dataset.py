@@ -61,9 +61,10 @@ class HatefulMemesFeaturesDataset(MMFDataset):
         else:
             if "label" in sample_info:
                 current_sample.targets = torch.tensor(
-                    sample_info["label"], dtype=torch.long
-                )
+                    sample_info["label"], dtype=torch.float
+                ).squeeze()
 
+        
         return current_sample
 
     def process_fg_labels(self, fg_dataset_type, sample_info, current_sample):
@@ -126,7 +127,7 @@ class HatefulMemesImageDataset(MMFDataset):
 
         if "label" in sample_info:
             current_sample.targets = torch.tensor(
-                sample_info["label"], dtype=torch.long
+                sample_info["label"], dtype=torch.float
             )
 
         return current_sample

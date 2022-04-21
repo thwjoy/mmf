@@ -246,7 +246,7 @@ class LogitBinaryCrossEntropy(nn.Module):
         """
         scores = model_output["scores"]
         targets = sample_list["targets"]
-        loss = F.binary_cross_entropy_with_logits(scores.squeeze().float(), targets.float(), reduction="mean")
+        loss = F.binary_cross_entropy_with_logits(scores.squeeze(), targets, reduction="mean")
 
         return loss
 

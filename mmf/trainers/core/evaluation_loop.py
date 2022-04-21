@@ -18,7 +18,7 @@ logger = logging.getLogger(__name__)
 
 class TrainerEvaluationLoopMixin(ABC):
     def evaluation_loop(
-        self, dataset_type: str, use_tqdm: bool = False, single_batch: bool = True
+        self, dataset_type: str, use_tqdm: bool = False, single_batch: bool = False
     ) -> Tuple[Dict[str, Any], Type[Meter]]:
         meter = Meter()
         reporter = self.dataset_loader.get_test_reporter(dataset_type)

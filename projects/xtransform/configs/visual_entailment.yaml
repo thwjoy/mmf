@@ -44,16 +44,13 @@ scheduler:
 
 evaluation:
   metrics:
-  - vqa_accuracy
+  - accuracy
 
 training:
   batch_size: 480
   lr_scheduler: true
   # Don't forget to update schedule_attributes if you update this
   max_updates: 60000
-  early_stop:
-    criteria: vqa2/vqa_accuracy
-    minimize: false
 
 # checkpoint:
 #   pretrained_state_mapping:

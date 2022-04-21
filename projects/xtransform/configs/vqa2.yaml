@@ -44,7 +44,13 @@ scheduler:
 
 evaluation:
   metrics:
-  - vqa_accuracy
+  - type: vqa_accuracy
+    key: vqa_accuracy
+  - type: topk_accuracy
+    key: topk_accuracy
+    params:
+      score_key: scores
+      k: 5
 
 training:
   batch_size: 480

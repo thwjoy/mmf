@@ -1,14 +1,12 @@
 model_config:
   xgen:
     training_head_type: classification
-    num_labels: 1
+    num_labels: 2
     losses:
-    - type: logit_bce
+    - type: cross_entropy
     classifier:
       type: mlp
       params:
-        # 128 + 768 in case of features
-        # Modal_Dim * Number of embeddings + Text Dim
         in_dim: 768
         out_dim: ${model_config.xgen.num_labels}
         hidden_dim: 768

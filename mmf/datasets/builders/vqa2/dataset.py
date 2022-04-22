@@ -100,8 +100,9 @@ class VQA2Dataset(MMFDataset):
             current_sample.update(features)
         else:
             # import pdb; pdb.set_trace()
-            if self.name == 'coco':
-                image_path = "COCO_%s2015_000000%i.jpg" % (self._dataset_type, sample_info["image_id"])
+            if self.name == 'coco' or self.name == 'vqa2':
+                split_name = self.image_db.base_path.split('/')[-1]            
+                image_path = "COCO_{}_{:0>12}.jpg".format(split_name, sample_info["image_id"])
             else: #if self.name == 'visual_genome':
                 image_path = str(sample_info["image_id"]) + ".jpg"
             current_sample.image = self.image_db.from_path(image_path)["images"][0]

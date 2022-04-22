@@ -135,10 +135,10 @@ class UniT(BaseModel):
             name: self.get_loss_fn(self.config.heads["vl"][name]["loss_type"])
             for name in self.config.heads["vl"]
         }
-        self.losses_dict["glue"] = {
-            name: self.get_loss_fn(self.config.heads["glue"][name]["loss_type"])
-            for name in self.config.heads["glue"]
-        }
+        # self.losses_dict["glue"] = {
+        #     name: self.get_loss_fn(self.config.heads["glue"][name]["loss_type"])
+        #     for name in self.config.heads["glue"]
+        # }
 
     def forward_bert_with_task_idx(self, sample_list):
         bert = self.bert_model.module
@@ -301,10 +301,10 @@ class UniT(BaseModel):
             if sample_list.dataset_type != "test":
                 loss_prefix = f"{sample_list.dataset_type}/{sample_list.dataset_name}/"
                 loss = self.losses_dict[task_type][sample_list.dataset_name](
-                    scores, sample_list.targets
+                    scores.squeeze(-1), sample_list.targets
                 )
-                if sample_list.dataset_name == "vqa2":
-                    loss *= sample_list.targets.size(1)
+                # if sample_list.dataset_name == "vqa2":
+                #     loss *= sample_list.targets.size(1)
                 losses[loss_prefix + f"loss_{idx}"] = loss
 
         detr_outputs["scores"] = scores

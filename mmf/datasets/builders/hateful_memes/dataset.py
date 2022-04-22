@@ -127,7 +127,7 @@ class HatefulMemesImageDataset(MMFDataset):
 
         if "label" in sample_info:
             current_sample.targets = torch.tensor(
-                sample_info["label"], dtype=torch.long
+                sample_info["label"], dtype=torch.float
             )
 
         return current_sample

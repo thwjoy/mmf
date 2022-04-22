@@ -1,0 +1,64 @@
+dataset_config:
+  hateful_memes:
+    data_dir: ${env.data_dir}/datasets
+    depth_first: false
+    fast_read: false
+    use_images: true
+    use_features: false
+    images:
+      train:
+      - hateful_memes/hateful_memes/
+      val:
+      - hateful_memes/hateful_memes/
+      test:
+      - hateful_memes/hateful_memes/
+    features:
+      train:
+      - hateful_memes/defaults/features/detectron.lmdb
+      val:
+      - hateful_memes/defaults/features/detectron.lmdb
+      test:
+      - hateful_memes/defaults/features/detectron.lmdb
+    annotations:
+      train:
+      - hateful_memes/hateful_memes/train.jsonl
+      val:
+      - hateful_memes/hateful_memes/dev_unseen.jsonl
+      test:
+      - hateful_memes/hateful_memes/test_unseen.jsonl
+    max_features: 100
+    processors:
+      text_processor:
+        type: bert_tokenizer
+        params:
+          tokenizer_config:
+            type: bert-base-uncased
+            params:
+              do_lower_case: true
+          mask_probability: 0
+          max_seq_length: 25
+      bbox_processor:
+        type: bbox
+        params:
+          max_length: 50
+      image_processor:
+        type: torchvision_transforms
+        params:
+          transforms:
+            - type: Resize
+              params:
+                size: [256, 256]
+            - type: CenterCrop
+              params:
+                size: [224, 224]
+            - ToTensor
+            - GrayScaleTo3Channels
+            - type: Normalize
+              params:
+                mean: [0.46777044, 0.44531429, 0.40661017]
+                std: [0.12221994, 0.12145835, 0.14380469]
+    return_features_info: false
+
+
+evaluation:
+  predict_file_format: csv

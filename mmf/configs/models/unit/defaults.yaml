@@ -10,11 +10,11 @@ model_config:
         vqa2: false
         hateful_memes: true
         visual_entailment: true
-      glue:
-        glue_qnli: true
-        glue_sst2: true
-        glue_mnli_mismatched: true
-        glue_qqp: true
+      # glue:
+      #   glue_qnli: true
+      #   glue_sst2: true
+      #   glue_mnli_mismatched: true
+      #   glue_qqp: true
     loss_on_all_hs: false
 
     base_args:
@@ -57,40 +57,44 @@ model_config:
         bert_model_name: bert-base-uncased
 
     heads:
-      detection:
-        detection_coco:
-          task_idx: 0
-          num_classes: 91
-          use_attr: false
-        detection_visual_genome:
-          task_idx: 1
-          num_classes: 1601
-          use_attr: true
+      # detection:
+      #   detection_coco:
+      #     task_idx: 0
+      #     num_classes: 91
+      #     use_attr: false
+      #   detection_visual_genome:
+      #     task_idx: 1
+      #     num_classes: 1601
+      #     use_attr: true
       vl:
         vqa2:
-          task_idx: 3
+          task_idx: 0
           num_labels: 3129
-          loss_type: binary_cross_entropy_with_logits
+          loss_type: cross_entropy
         visual_entailment:
-          task_idx: 9
+          task_idx: 1
           num_labels: 3
           loss_type: cross_entropy
-      glue:
-        glue_qnli:
-          task_idx: 5
-          num_labels: 2
-          loss_type: cross_entropy
-        glue_mnli_mismatched:
-          task_idx: 6
-          num_labels: 3
-          loss_type: cross_entropy
-        glue_sst2:
-          task_idx: 7
-          num_labels: 2
-          loss_type: cross_entropy
-        glue_qqp:
-          task_idx: 8
-          num_labels: 2
-          loss_type: cross_entropy
+        hateful_memes:
+          task_idx: 2
+          num_labels: 1
+          loss_type: binary_cross_entropy_with_logits
+      # glue:
+      #   glue_qnli:
+      #     task_idx: 5
+      #     num_labels: 2
+      #     loss_type: cross_entropy
+      #   glue_mnli_mismatched:
+      #     task_idx: 6
+      #     num_labels: 3
+      #     loss_type: cross_entropy
+      #   glue_sst2:
+      #     task_idx: 7
+      #     num_labels: 2
+      #     loss_type: cross_entropy
+      #   glue_qqp:
+      #     task_idx: 8
+      #     num_labels: 2
+      #     loss_type: cross_entropy
     max_task_num: 256
     predict_attributes: false

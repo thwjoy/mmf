@@ -395,7 +395,6 @@ class VQAAccuracy(BaseMetric):
 
         output = self._masked_unk_softmax(output, 1, 0)
         output = output.argmax(dim=1)  # argmax
-
         one_hots = expected.new_zeros(*expected.size())
         one_hots.scatter_(1, output.view(-1, 1), 1)
         scores = one_hots * expected

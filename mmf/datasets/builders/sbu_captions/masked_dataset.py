@@ -54,8 +54,11 @@ class MaskedSBUDataset(BaseDataset):
         caption_data = {"text": caption}
         try:
             response = requests.get(url)
-            img = Image.open(BytesIO(response.content))
-            current_sample.image = self.image_processor(img)
+            if response.status_code == 200:
+                img = Image.open(BytesIO(response.content))
+                current_sample.image = self.image_processor(img)
+            else:
+                return None
         except:
             return None
         processed_question = self.text_processor(caption_data)
@@ -63,6 +66,7 @@ class MaskedSBUDataset(BaseDataset):
         if "input_ids" in processed_question:
             current_sample.update(processed_question)
 
+        import pdb; pdb.set_trace()
         return current_sample
 
     

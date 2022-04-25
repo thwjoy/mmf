@@ -12,7 +12,7 @@ python mmf_run config=projects/xtransform/configs_vilt/visual_entailment/default
        run_type=val \
        dataset=visual_entailment \
        model=vilt
-       env.save_dir=$1
+       env.save_dir=$1/visual_entailment
         
 
 

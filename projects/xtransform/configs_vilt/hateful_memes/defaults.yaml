@@ -1,6 +1,3 @@
-includes:
-- ../projects/unit/configs/hateful_memes_dataset_cfg.yaml
-
 other_configs:
   image_w: 384
   image_h: 384

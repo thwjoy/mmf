@@ -66,7 +66,6 @@ class MaskedSBUDataset(BaseDataset):
         if "input_ids" in processed_question:
             current_sample.update(processed_question)
 
-        import pdb; pdb.set_trace()
         return current_sample
 
     

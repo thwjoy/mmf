@@ -1,6 +1,6 @@
 dataset_config:
   visual_genome:
-      data_dir: ${env.data_dir}
+      data_dir: ${env.data_dir}/datasets
       depth_first: false
       fast_read: false
       use_images: true

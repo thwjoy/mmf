@@ -1,15 +1,11 @@
-evaluation:
-  metrics:
-  - type: xgen
-    params: 
-      save_dir: ${env.save_dir}
-    
 training:
   max_updates: 100000
-  checkpoint_interval: 1000
+  checkpoint_interval: 10000
   evaluation_interval: 1000
   batch_size: 256 # 32 per GPU * 8 GPU
   log_interval: 1000
+  # find_unused_parameters: True
+  
 
 optimizer:
   type: adam_w

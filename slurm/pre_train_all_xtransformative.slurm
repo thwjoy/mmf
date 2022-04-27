@@ -1,6 +1,6 @@
 #!/bin/bash
 #SBATCH --job-name=run_xtransform    # Job name
-#SBATCH --gres=gpu:8                 # Run on a 8 GPU
+#SBATCH --gres=gpu:4                 # Run on a 8 GPU
 #SBATCH --output=serial_test_%j.log  # Standard output and error log
 
 module load python
@@ -11,4 +11,10 @@ source activate mmf
 echo $TORCH_HOME
 echo $PYTORCH_TRANSFORMERS_CACHE
 
-mmf_run config=projects/xtransform/configs/pre_train_xtran.yaml model=xgen datasets=coco,masked_conceptual_captions_12,masked_sbu,visual_genome run_type=train env.save_dir=$1/xtransform env.data_dir=/fsx-labs/thwjoy/mmf/data
+mmf_run config=projects/xtransform/configs/pre_train_xtran.yaml \
+        model=xgen \
+        datasets=coco \
+        run_type=train \
+        env.save_dir=$1/xtransform \
+        env.data_dir=/fsx-labs/thwjoy/mmf/data \
+        training.batch_size=512

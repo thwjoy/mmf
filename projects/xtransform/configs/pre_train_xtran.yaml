@@ -6,3 +6,9 @@ model_config:
     losses:
     - cross_transformative_loss
 
+evaluation:
+  metrics:
+  - type: xgen
+    params: 
+      save_dir: ${env.save_dir}
+

@@ -1435,4 +1435,5 @@ class XGenMetric(BaseMetric):
                 # f.write("%s\r" % gen_decoded[i]) 
                 # f.write('#' * 100 + '\r')
 
-        return -1.0
+        return torch.tensor([0.0], device=sample_list['image'].device)
+

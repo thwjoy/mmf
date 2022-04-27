@@ -146,7 +146,7 @@ training:
     verbose_dump: false
 
     # Turn on if you want to ignore unused parameters in case of DDP
-    find_unused_parameters: false
+    find_unused_parameters: true
 
     # By default metrics evaluation is turned off during training. Set this to true
     # to enable evaluation every log_interval number of updates

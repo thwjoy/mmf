@@ -8,12 +8,9 @@ module load python
 source ~/.bashrc
 source activate mmf
 
-echo $TORCH_HOME
-echo $PYTORCH_TRANSFORMERS_CACHE
-
 mmf_run config=projects/xtransform/configs/pre_train_xtran.yaml \
         model=xgen \
-        datasets=coco \
+        datasets=coco,masked_sbu,masked_conceptual_captions_12,visual_genome \
         run_type=train \
         env.save_dir=$1/xtransform \
         env.data_dir=/fsx-labs/thwjoy/mmf/data \

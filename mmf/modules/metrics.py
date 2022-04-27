@@ -1396,6 +1396,13 @@ class XGenMetric(BaseMetric):
         super().__init__("xgen")
         self.config = kwargs
 
+        # # set up tokenizer here
+        from mmf.utils.build import build_processors
+        self.processor = build_processors(self.config['processors'])['text_processor']
+
+    def decode_text(self, ids):
+        return self.processor.processor._tokenizer.batch_decode(ids)
+
     @staticmethod
     def prep_images(I, Imask, Ipred):
         Imask = Imask.squeeze(0).expand(I.shape)
@@ -1416,24 +1423,23 @@ class XGenMetric(BaseMetric):
                                 torch.ones_like(model_output['mask_im']),
                                 model_output['x_img'])
 
-        # text_decoded = loader_test.dataset.tokenizer.batch_decode(sample_list['text']['input_ids'])
-        # recon_decoded = loader_test.dataset.tokenizer.batch_decode(model_output['r_text'].argmax(dim=-1))
-        # gen_decoded = loader_test.dataset.tokenizer.batch_decode(model_output['x_text'].argmax(dim=-1))
+        text_decoded = self.decode_text(sample_list['input_ids'])
+        recon_decoded = self.decode_text(model_output['r_text'].argmax(dim=-1))
+        gen_decoded = self.decode_text(model_output['x_text'].argmax(dim=-1))
 
-        # with open(os.path.join(config.save_dir, "language.txt"), 'w') as f:
-            # f.write('#' * 100 + '\r')
-        
         os.makedirs(self.config['save_dir'], exist_ok=True)
 
-        for i in range(sample_list['image'][:10].size(0)):
-            torchvision.utils.save_image(Im[i], os.path.join(self.config['save_dir'], "orig_image_%i.png" % i))
-            torchvision.utils.save_image(Ipred[i].float(), os.path.join(self.config['save_dir'], "recon_%i.png" % i))
-            torchvision.utils.save_image(Iin[i].float(), os.path.join(self.config['save_dir'], "mask_%i.png" % i))
-            torchvision.utils.save_image(Icross[i].float(), os.path.join(self.config['save_dir'], "cross_%i.png" % i))
-                # f.write("%s\r" % text_decoded[i])
-                # f.write("%s\r" % recon_decoded[i])
-                # f.write("%s\r" % gen_decoded[i]) 
-                # f.write('#' * 100 + '\r')
+        with open(os.path.join(self.config['save_dir'], "language.txt"), 'w') as f:
+            f.write('#' * 100 + '\r')
+            for i in range(sample_list['image'][:10].size(0)):
+                torchvision.utils.save_image(Im[i], os.path.join(self.config['save_dir'], "orig_image_%i.png" % i))
+                torchvision.utils.save_image(Ipred[i].float(), os.path.join(self.config['save_dir'], "recon_%i.png" % i))
+                torchvision.utils.save_image(Iin[i].float(), os.path.join(self.config['save_dir'], "mask_%i.png" % i))
+                torchvision.utils.save_image(Icross[i].float(), os.path.join(self.config['save_dir'], "cross_%i.png" % i))
+                f.write("%s\r" % text_decoded[i])
+                f.write("%s\r" % recon_decoded[i])
+                f.write("%s\r" % gen_decoded[i]) 
+                f.write('#' * 100 + '\r')
 
         return torch.tensor([0.0], device=sample_list['image'].device)
 

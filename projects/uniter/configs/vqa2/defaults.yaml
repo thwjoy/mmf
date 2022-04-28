@@ -11,15 +11,15 @@ model_config:
         num_labels: 3129
         lr_multiplier: 10
     losses:
-      vqa2: logit_bce
+      vqa2: cross_entropy
     text_embeddings:
       vocab_size: 28996
 
 dataset_config:
   vqa2:
     return_features_info: true
-    use_features: true
-    use_images: false
+    use_features: false
+    use_images: true
     processors:
       text_processor:
         type: uniter_text_tokenizer
@@ -47,7 +47,7 @@ scheduler:
 
 evaluation:
   metrics:
-  - vqa_accuracy
+  - accuracy
 
 training:
   batch_size: 5120
@@ -55,5 +55,5 @@ training:
   # Don't forget to update schedule_attributes if you update this
   max_updates: 5000
   early_stop:
-    criteria: vqa2/vqa_accuracy
+    criteria: vqa2/accuracy
     minimize: false

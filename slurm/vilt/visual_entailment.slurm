@@ -9,7 +9,7 @@ source ~/.bashrc
 source activate mmf
 
 mmf_run config=projects/xtransform/configs_vilt/visual_entailment/defaults.yaml \
-       run_type=val \
+       run_type=train_val \
        dataset=visual_entailment \
        model=vilt
        env.save_dir=$1/vilt/visual_entailment \

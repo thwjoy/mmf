@@ -69,7 +69,7 @@ training:
   checkpoint_interval: 4000
   evaluation_interval: 4000
   batch_size: 256 # 32 per GPU * 8 GPU
-  find_unused_parameters: false
+  find_unused_parameters: true
   log_interval: 1000
 
 optimizer:

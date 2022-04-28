@@ -1,5 +1,6 @@
 #!/bin/bash
 #SBATCH --job-name=run_xtransform    # Job name
+#SBATCH -N 1
 #SBATCH --gres=gpu:4                 # Run on a 8 GPU
 #SBATCH --output=serial_test_%j.log  # Standard output and error log
 

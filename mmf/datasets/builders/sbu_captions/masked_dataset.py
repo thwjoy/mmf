@@ -43,7 +43,11 @@ class MaskedSBUDataset(BaseDataset):
             url = line1.rstrip()
             caption = line2.rstrip()
             self.photos.append(url)
-            self.captions.append(caption)      
+            self.captions.append(caption)  
+
+        if dataset != "train":
+            self.photos = self.photos[:2048]
+            self.captions = self.captions[:2048]    
 
     def init_processors(self):
         super().init_processors()

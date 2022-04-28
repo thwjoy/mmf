@@ -21,6 +21,9 @@ class MaskedConceptualCaptions12Dataset(BaseDataset):
             name = "masked_conceptual_captions_12"
         super().__init__(name, config, dataset, index=imdb_file_index)
         self.data = pd.read_table(os.path.join(config.data_dir, config.features))
+
+        if dataset != "train":
+            self.data = self.data.iloc[:2048]
         
     def init_processors(self):
         super().init_processors()

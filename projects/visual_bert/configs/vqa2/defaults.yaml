@@ -6,11 +6,13 @@ model_config:
     num_labels: 3129
     pooler_strategy: vqa
     losses:
-    - type: logit_bce
+    - type: cross_entropy
 
 dataset_config:
   vqa2:
     return_features_info: true
+    use_images: false
+    use_features: true
     processors:
       text_processor:
         type: bert_tokenizer

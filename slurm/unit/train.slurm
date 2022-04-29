@@ -1,5 +1,5 @@
 #!/bin/bash
-#SBATCH --job-name=run_hateful_memes    # Job name
+#SBATCH --job-name=run_unit    # Job name
 #SBATCH --gres=gpu:1                  # Run on a single GPU
 #SBATCH --output=serial_test_%j.log   # Standard output and error log
 

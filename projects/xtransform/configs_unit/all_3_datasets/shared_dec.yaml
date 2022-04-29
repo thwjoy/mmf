@@ -32,9 +32,6 @@ model_config:
 
 evaluation:
   metrics:
-  - type: vqa_accuracy
-    datasets:
-    - vqa2
   # - type: detection_mean_ap
   #   key: detection_mean_ap
   #   datasets:
@@ -51,6 +48,7 @@ evaluation:
     datasets:
     - visual_entailment
     - hateful_memes
+    - vqa2
 
     # - glue_qnli
     # - glue_qqp
@@ -83,10 +81,10 @@ training:
   checkpoint_interval: 10000
   evaluation_interval: 10000
   dataset_size_proportional_sampling: false
-  early_stop:
-    enabled: false
-    criteria: vqa2/vqa_accuracy
-    minimize: false
+  # early_stop:
+  #   enabled: false
+  #   criteria: vqa2/vqa_accuracy
+  #   minimize: false
   stdout_capture: false
   find_unused_parameters: true
 

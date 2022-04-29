@@ -8,7 +8,7 @@ module load python
 source ~/.bashrc
 source activate mmf
 
-mmf_run config=projects/uniter/configs/vqa2/defaults.yaml \
+mmf_run config=projects/xtransform/configs_uniter/vqa2.yaml \
         run_type=train_val \
         dataset=vqa2 \
         model=uniter \

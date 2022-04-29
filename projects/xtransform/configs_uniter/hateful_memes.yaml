@@ -4,19 +4,24 @@
 model_config:
   uniter:
     do_pretraining: false
-    tasks: vqa2
+    tasks: hateful_memes
     heads:
-      vqa2:
+      hateful_memes:
         type: mlp
-        num_labels: 3129
-        lr_multiplier: 10
+        num_layers: 1
+        freeze: false
+        lr_multiplier: 10.0
+        in_dim: 768
+        hidden_size: 1536
+        num_labels: 1
+        pooler_name: bert_pooler
     losses:
-      vqa2: cross_entropy
+      hateful_memes: logit_bce
     text_embeddings:
       vocab_size: 28996
 
 dataset_config:
-  vqa2:
+  hateful_memes:
     return_features_info: true
     use_features: true
     use_images: false
@@ -55,6 +60,6 @@ training:
   lr_scheduler: true
   # Don't forget to update schedule_attributes if you update this
   max_updates: 5000
-  early_stop:
-    criteria: vqa2/accuracy
-    minimize: false
+  # early_stop:
+  #   criteria: hateful_memes/accuracy
+  #   minimize: false

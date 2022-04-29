@@ -4,19 +4,24 @@
 model_config:
   uniter:
     do_pretraining: false
-    tasks: vqa2
+    tasks: visual_entailment
     heads:
-      vqa2:
-        type: mlp
-        num_labels: 3129
-        lr_multiplier: 10
+      visual_entailment:
+          type: mlp
+          num_layers: 1
+          freeze: false
+          lr_multiplier: 10.0
+          in_dim: 768
+          hidden_size: 1536
+          num_labels: 3
+          pooler_name: bert_pooler
     losses:
-      vqa2: cross_entropy
+      visual_entailment: cross_entropy
     text_embeddings:
       vocab_size: 28996
 
 dataset_config:
-  vqa2:
+  visual_entailment:
     return_features_info: true
     use_features: true
     use_images: false
@@ -56,5 +61,5 @@ training:
   # Don't forget to update schedule_attributes if you update this
   max_updates: 5000
   early_stop:
-    criteria: vqa2/accuracy
+    criteria: visual_entailment/accuracy
     minimize: false

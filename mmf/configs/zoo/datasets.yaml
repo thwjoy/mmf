@@ -173,16 +173,16 @@ coco:
       features:
       - url: mmf://datasets/coco/defaults/features/test2015.tar.gz
         file_name: test2015.tar.gz
-        hashcode: ddfba5d07b01f31456d7e3caeeb03aecc379a45b729992c6efaf1d76c601f072
+        # hashcode: ddfba5d07b01f31456d7e3caeeb03aecc379a45b729992c6efaf1d76c601f072
       - url: mmf://datasets/coco/defaults/features/trainval2014.tar.gz
         file_name: trainval2014.tar.gz
-        hashcode: 242b4a2bf3ab930c3275d3ab9b4e1dccd1fb1745d3e939f8d50482d83e1fd1ad
+        # hashcode: 242b4a2bf3ab930c3275d3ab9b4e1dccd1fb1745d3e939f8d50482d83e1fd1ad
       - url: mmf://datasets/coco/defaults/features/coco_val2017.tar.gz
         file_name: coco_val2017.tar.gz
-        hashcode: f9ca8004d59cff6d6cd9b1b2a8c20fdcfd8b69247b8fa85a980769bce07365f3
+        # hashcode: f9ca8004d59cff6d6cd9b1b2a8c20fdcfd8b69247b8fa85a980769bce07365f3
       - url: mmf://datasets/coco/defaults/features/coco_train2017.tar.gz
         file_name: coco_train2017.tar.gz
-        hashcode: 7815fa155f3ab438bbb753bd0ae746add35bafedfbd3db582141c2b99b817ddc
+        # hashcode: 7815fa155f3ab438bbb753bd0ae746add35bafedfbd3db582141c2b99b817ddc
       annotations:
       - url: mmf://datasets/coco/defaults/annotations/annotations.tar.gz
         file_name: annotations.tar.gz

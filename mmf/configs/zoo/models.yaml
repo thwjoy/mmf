@@ -554,7 +554,7 @@ uniter:
     resources:
     - url: mmf://models/uniter/uniter.pretrained.tar.gz
       file_name: uniter.pretrained.tar.gz
-      hashcode: e843e65a3d8b4ed353779b96d654dde0440f5f04a79b3b4740309d40a3542664
+      # hashcode: e843e65a3d8b4ed353779b96d654dde0440f5f04a79b3b4740309d40a3542664
 
 villa:
   defaults: ${villa.pretrained}
@@ -563,7 +563,7 @@ villa:
     resources:
     - url: mmf://models/uniter/villa.pretrained.tar.gz
       file_name: villa.pretrained.tar.gz
-      hashcode: 7a8f31421ef644fddc99bd142a0090660573dd526a779d025253c3fd996754fc
+      # hashcode: 7a8f31421ef644fddc99bd142a0090660573dd526a779d025253c3fd996754fc
 
 vinvl:
   defaults: ${vinvl.coco_ir}

@@ -12,5 +12,5 @@ mmf_run config=projects/xtransform/configs_vilt/vqa2/defaults.yaml \
        run_type=train_val \
        dataset=vqa2 \
        model=vilt \
-       env.save_dir=$1/vilt/vqa2 \
+       env.save_dir=save/vilt/vqa2 \
        env.data_dir=/fsx-labs/thwjoy/mmf/data

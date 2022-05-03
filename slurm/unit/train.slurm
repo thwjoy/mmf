@@ -13,7 +13,7 @@ python mmf_cli/run.py     \
         datasets=vqa2,visual_entailment,hateful_memes    \
         model=unit run_type=train  \
         checkpoint.resume_zoo=unit.coco.single_task \
-        env.save_dir=$1/unit \
+        env.save_dir=save/unit \
         env.data_dir=/fsx-labs/thwjoy/mmf/data
 
         

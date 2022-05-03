@@ -12,6 +12,6 @@ mmf_run config=projects/xtransform/configs_vilt/hateful_memes/defaults.yaml \
        run_type=train_val \
        dataset=hateful_memes \
        model=vilt \
-       env.save_dir=$1/vilt/hateful_memes \
+       env.save_dir=save/vilt/hateful_memes \
        env.data_dir=/fsx-labs/thwjoy/mmf/data \
        training.find_unused_parameters=true

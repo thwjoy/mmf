@@ -12,7 +12,7 @@ mmf_run config=projects/xtransform/configs_vilt/visual_entailment/defaults.yaml 
        run_type=train_val \
        dataset=visual_entailment \
        model=vilt
-       env.save_dir=$1/vilt/visual_entailment \
+       env.save_dir=save/vilt/visual_entailment \
        env.data_dir=/fsx-labs/thwjoy/mmf/data
         
 

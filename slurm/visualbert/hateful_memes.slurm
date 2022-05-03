@@ -13,7 +13,7 @@ mmf_run config=projects/visual_bert/configs/hateful_memes/defaults.yaml \
         dataset=hateful_memes \
         model=visual_bert \
         checkpoint.resume_zoo=visual_bert.pretrained.coco.full \
-        env.save_dir=$1/visual_bert \
+        env.save_dir=save/visual_bert/hateful_memes \
         env.data_dir=/fsx-labs/thwjoy/mmf/data
 
         

@@ -13,7 +13,7 @@ mmf_run config=projects/xtransform/configs_uniter/visual_entailment.yaml \
         dataset=visual_entailment \
         model=uniter \
         checkpoint.resume_zoo=villa.pretrained \
-        env.save_dir=$1/villa/visual_entailment \
+        env.save_dir=save/villa/visual_entailment \
         env.data_dir=/fsx-labs/thwjoy/mmf/data
 
         

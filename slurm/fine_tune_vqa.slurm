@@ -11,8 +11,8 @@ source activate mmf
 mmf_run config=projects/xtransform/configs/vqa2.yaml \
         model=xgen \
         datasets=vqa2 \
-        env.resume_file=$1/best.ckpt \
-        env.save_dir=$1/vqa
+        env.resume_file=save/best.ckpt \
+        env.save_dir=save/vqa
         
 
 

@@ -11,8 +11,8 @@ source activate mmf
 mmf_run config=projects/xtransform/configs/visual_entailment.yaml \
         model=xgen \
         datasets=visual_entailment \
-        env.resume_file=$1 \
-        env.save_dir=$1/visual_entailment
+        env.resume_file=save \
+        env.save_dir=save/visual_entailment
         
 
 

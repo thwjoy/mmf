@@ -13,7 +13,7 @@ mmf_run config=projects/xtransform/configs_uniter/hateful_memes.yaml \
         dataset=hateful_memes \
         model=uniter \
         checkpoint.resume_zoo=villa.pretrained \
-        env.save_dir=$1/villa/hateful_memes \
+        env.save_dir=save/villa/hateful_memes \
         env.data_dir=/fsx-labs/thwjoy/mmf/data
 
         

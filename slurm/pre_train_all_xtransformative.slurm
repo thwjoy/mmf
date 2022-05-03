@@ -13,6 +13,6 @@ mmf_run config=projects/xtransform/configs/pre_train_xtran.yaml \
         model=xgen \
         datasets=coco,masked_sbu,masked_conceptual_captions_12,visual_genome \
         run_type=train \
-        env.save_dir=$1/xtransform \
+        env.save_dir=save/xtransform \
         env.data_dir=/fsx-labs/thwjoy/mmf/data \
         training.batch_size=512

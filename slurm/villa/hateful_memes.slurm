@@ -1,5 +1,5 @@
 #!/bin/bash
-#SBATCH --job-name=run_uniter_hateful_memes    # Job name
+#SBATCH --job-name=run_villa_hateful_memes    # Job name
 #SBATCH --gres=gpu:8                  # Run on a single GPU
 #SBATCH --output=serial_test_%j.log   # Standard output and error log
 
@@ -13,7 +13,7 @@ mmf_run config=projects/xtransform/configs_uniter/hateful_memes.yaml \
         dataset=hateful_memes \
         model=uniter \
         checkpoint.resume_zoo=villa.pretrained \
-        env.save_dir=$1/villa \
+        env.save_dir=$1/villa/hateful_memes \
         env.data_dir=/fsx-labs/thwjoy/mmf/data
 
         

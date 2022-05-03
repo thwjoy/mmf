@@ -13,10 +13,10 @@ model_config:
         lr_multiplier: 10.0
         in_dim: 768
         hidden_size: 1536
-        num_labels: 1
+        num_labels: 2
         pooler_name: bert_pooler
     losses:
-      hateful_memes: logit_bce
+      hateful_memes: cross_entropy
     text_embeddings:
       vocab_size: 28996
 

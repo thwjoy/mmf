@@ -13,7 +13,7 @@ mmf_run config=projects/xtransform/configs_uniter/vqa2.yaml \
         dataset=vqa2 \
         model=uniter \
         checkpoint.resume_zoo=uniter.pretrained \
-        env.save_dir=$1/uniter \
+        env.save_dir=$1/uniter/vqa2 \
         env.data_dir=/fsx-labs/thwjoy/mmf/data
 
         

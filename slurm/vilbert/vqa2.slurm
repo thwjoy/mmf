@@ -13,7 +13,7 @@ mmf_run config=projects/visual_bert/configs/vqa2/defaults.yaml \
         dataset=vqa2 \
         model=vilbert \
         checkpoint.resume_zoo=visual_bert.pretrained.coco.full \
-        env.save_dir=$1/visual_bert \
+        env.save_dir=$1/visual_bert/vqa2 \
         env.data_dir=/fsx-labs/thwjoy/mmf/data
 
         

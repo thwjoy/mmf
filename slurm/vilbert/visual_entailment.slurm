@@ -12,7 +12,7 @@ mmf_run config=projects/visual_bert/configs/visual_entailment/defaults.yaml \
         run_type=train_val \
         dataset=visual_entailment \
         model=vilbert \
-        checkpoint.resume_zoo=visual_bert.pretrained.coco.full \
+        checkpoint.resume_zoo=visuvilbertal_bert.pretrained.coco.full \
         env.save_dir=$1/vilbert \
         env.data_dir=/fsx-labs/thwjoy/mmf/data
 

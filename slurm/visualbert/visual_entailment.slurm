@@ -13,7 +13,7 @@ mmf_run config=projects/visual_bert/configs/visual_entailment/defaults.yaml \
         dataset=visual_entailment \
         model=visual_bert \
         checkpoint.resume_zoo=visual_bert.pretrained.coco.full \
-        env.save_dir=$1/visual_bert \
+        env.save_dir=$1/visual_bert/visual_entailment \
         env.data_dir=/fsx-labs/thwjoy/mmf/data
 
         

@@ -133,6 +133,8 @@ class XGen(BaseModel):
         self.mask_ratio_text = 0.85
         self.patch_size = self.config.image_encoder.params.patch_size
         self.im_shape = self.config.image_encoder.params.image_size
+        # self.im_embeddings.shape = torch.Size((int(np.prod(self.im_shape) / self.patch_size**2),
+        #                                        self.config.joint_encoder.params.hidden_dim))
 
         self.text_masked_token = torch.nn.Parameter(torch.randn(1, 1, self.config.joint_encoder.params.hidden_dim))
         self.dec_masked_token_im = torch.nn.Parameter(torch.randn(1, 1, self.config.joint_encoder.params.hidden_dim))
@@ -178,6 +180,36 @@ class XGen(BaseModel):
         return perm, invPerm
 
     def forward(self, sample_list):
+        if "input_ids" in sample_list and "image" in sample_list:
+            return self.forward_joint(sample_list)  
+        elif "input_ids" in sample_list:
+            return self.forward_text(sample_list)
+        elif "image" in sample_list:
+            return self.forward_image(sample_list)
+
+    def forward_text(self, sample_list):
+        text_embedding = self.text_embeddings(
+            sample_list["input_ids"], sample_list["segment_ids"]
+        )
+
+        n_text_tokens = text_embedding.size(1) 
+
+        # replace txt with masking tokens
+        perm_text, invPerm_text = self._get_perm(n_text_tokens, device=embeddings.device)
+        s_text = int(self.mask_ratio_text * n_text_tokens)
+        text_tokens_mask = self.text_masked_token.expand_as(text_embedding[:, perm_text[s_text:]])
+        text_tokens_keep = text_embedding[:, perm_text[:s_text]]
+        text_embedding = torch.cat([text_tokens_keep, text_tokens_mask], dim=1)
+        text_embedding = text_embedding[:, invPerm_text]
+
+        attention_mask_joint, attention_mask_im, attention_mask_text = self.get_attention_mask(
+            sample_list, text_embedding, image_embedding, invPerm_im[:s_im]
+        )
+
+        seqence, _ = self.joint_encoder()
+
+
+    def forward_joint(self, sample_list):
         text_embedding = self.text_embeddings(
             sample_list["input_ids"], sample_list["segment_ids"], return_sequence=True
         )

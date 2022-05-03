@@ -1,0 +1,38 @@
+dataset_config:
+  coco:
+    data_dir: /datasets01
+    use_images: true
+    use_features: false
+    zoo_requirements:
+    - imagenet.defaults
+    annotation_style: coco
+    images:
+      train:
+      - imagenet_full_size/061417/train
+      test:
+      - imagenet_full_size/061417/test
+      val:
+      - imagenet_full_size/061417/val
+    processors:
+      image_processor:
+        type: torchvision_transforms
+        params:
+          transforms:
+            - type: Resize
+              params:
+                size: [256, 256]
+            - type: CenterCrop
+              params:
+                size: [224, 224]
+            - ToTensor
+            - GrayScaleTo3Channels
+            - type: Normalize
+              params:
+                mean: [0.46777044, 0.44531429, 0.40661017]
+                std: [0.12221994, 0.12145835, 0.14380469]
+
+    return_features_info: false
+    # Return OCR information
+    use_ocr: false
+    # Return spatial information of OCR tokens if present
+    use_ocr_info: false

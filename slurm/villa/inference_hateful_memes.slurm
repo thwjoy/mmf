@@ -1,0 +1,23 @@
+#!/bin/bash
+#SBATCH --job-name=run_villa_hateful_memes    # Job name
+#SBATCH --gres=gpu:8                  # Run on a single GPU
+#SBATCH --output=serial_test_%j.log   # Standard output and error log
+
+module load python
+
+source ~/.bashrc
+source activate mmf
+
+mmf_predict config=projects/xtransform/configs_uniter/hateful_memes.yaml \
+        run_type=test \
+        dataset=hateful_memes \
+        model=uniter \
+        checkpoint.resume_file=save/villa/hateful_memes/best.cpkt \
+        env.save_dir=save/villa/hateful_memes \
+        env.data_dir=/fsx-labs/thwjoy/mmf/data
+
+        
+
+
+
+        

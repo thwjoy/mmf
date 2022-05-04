@@ -10,9 +10,13 @@ source activate mmf
 
 mmf_run config=projects/xtransform/configs/visual_entailment.yaml \
         model=xgen \
+        run_type=train \
         datasets=visual_entailment \
-        env.resume_file=save \
-        env.save_dir=save/visual_entailment
+        checkpoint.resume_file=save/$1/best.ckpt \
+        env.save_dir=save/$1/visual_entailment \
+        training.batch_size=512 \
+        env.data_dir=/fsx-labs/thwjoy/mmf/data \
+        checkpoint.reset.optimizer=true 
         
 
 

@@ -12,7 +12,7 @@ mmf_predict config=projects/xtransform/configs_uniter/vqa2.yaml \
         run_type=val \
         dataset=vqa2 \
         model=uniter \
-        checkpoint.resume_zoo=save/uniter/vqa2/best.cpkt \
+        checkpoint.resume_file=save/uniter/vqa2/best.cpkt \
         env.save_dir=save/uniter/vqa2 \
         env.data_dir=/fsx-labs/thwjoy/mmf/data
 

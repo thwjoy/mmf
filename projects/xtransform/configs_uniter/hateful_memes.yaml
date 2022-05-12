@@ -54,6 +54,8 @@ scheduler:
 evaluation:
   metrics:
   - accuracy
+  - binary_f1
+  - roc_auc
 
 training:
   batch_size: 512

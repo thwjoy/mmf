@@ -92,6 +92,15 @@ scheduler:
 
 evaluation:
   metrics:
-    - type: vqa_accuracy
-      datasets:
+  - type: accuracy
+    key: accuracy
+    datasets:
       - vqa2
+  - type: topk_accuracy
+    key: topk_accuracy
+    datasets:
+      - vqa2
+    params:
+      score_key: scores
+      k: 5
+      

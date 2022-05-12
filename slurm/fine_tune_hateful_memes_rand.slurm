@@ -13,12 +13,12 @@ mmf_run config=projects/xtransform/configs/hateful_memes.yaml \
         model=xgen \
         run_type=train \
         datasets=hateful_memes \
-        checkpoint.resume_file=save/$1/best.ckpt \
-        env.save_dir=save/$1/hateful_memes \
+        env.save_dir=save/random/hateful_memes \
         training.batch_size=512 \
         env.data_dir=/fsx-labs/thwjoy/mmf/data \
         training.evaluation_interval=1000 \
         checkpoint.reset.optimizer=true 
+        
         
 
 

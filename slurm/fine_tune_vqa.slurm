@@ -1,7 +1,8 @@
 #!/bin/bash
-#SBATCH --job-name=run_contrastive    # Job name
+#SBATCH --job-name=run_vqa    # Job name
 #SBATCH --gres=gpu:8                  # Run on a single GPU
 #SBATCH --output=serial_test_%j.log   # Standard output and error log
+#SBATCH --requeue
 
 module load python
 
@@ -13,9 +14,10 @@ mmf_run config=projects/xtransform/configs/vqa2.yaml \
         run_type=train \
         datasets=vqa2 \
         checkpoint.resume_file=save/$1/best.ckpt \
-        env.save_dir=save/$1/vqa \
+        env.save_dir=save/$1/vqa2 \
         training.batch_size=512 \
         env.data_dir=/fsx-labs/thwjoy/mmf/data \
+        training.evaluation_interval=1000 \
         checkpoint.reset.optimizer=true 
 
 

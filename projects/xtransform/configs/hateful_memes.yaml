@@ -51,6 +51,7 @@ training:
   lr_scheduler: true
   # Don't forget to update schedule_attributes if you update this
   max_updates: 60000
+  evaluation_interval: 5000
 
 # checkpoint:
 #   pretrained_state_mapping:

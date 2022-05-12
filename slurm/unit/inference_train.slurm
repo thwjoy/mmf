@@ -11,8 +11,8 @@ source activate mmf
 python mmf_cli/predict.py     \
         config=projects/xtransform/configs_unit/all_3_datasets/shared_dec.yaml     \
         datasets=vqa2,visual_entailment,hateful_memes    \
-        model=unit run_type=test  \
-        checkpoint.resume_file=save/unit/best.cpkt \
+        model=unit run_type=val  \
+        checkpoint.resume_file=save/unit/best.ckpt \
         env.save_dir=save/unit \
         env.data_dir=/fsx-labs/thwjoy/mmf/data
 

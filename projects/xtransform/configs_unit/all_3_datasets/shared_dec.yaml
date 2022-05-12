@@ -32,23 +32,32 @@ model_config:
 
 evaluation:
   metrics:
-  # - type: detection_mean_ap
-  #   key: detection_mean_ap
-  #   datasets:
-  #   - detection_coco
-  #   - detection_visual_genome
-  #   params:
-  #     dataset_json_files:
-  #       detection_coco:
-  #         val: ${env.data_dir}/datasets/coco/detection_2017/annotations/annotations/instances_val2017.json
-  #       detection_visual_genome:
-  #         val: ${env.data_dir}/datasets/visual_genome/detection_split_by_coco_2017/annotations/instances_val_split_by_coco_2017.json
   - type: accuracy
     key: accuracy
     datasets:
     - visual_entailment
     - hateful_memes
     - vqa2
+  - type: topk_accuracy
+    key: topk_accuracy
+    datasets:
+      - vqa2
+    params:
+      score_key: scores
+      k: 5
+  - type: binary_f1
+    key: binary_f1
+    datasets: 
+      - hateful_memes
+  - type: roc_auc
+    key: roc_auc
+    datasets: 
+      - hateful_memes
+  # metrics:
+  # - accuracy
+  # - binary_f1
+  # - roc_auc
+
 
     # - glue_qnli
     # - glue_qqp

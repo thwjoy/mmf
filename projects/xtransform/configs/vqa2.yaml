@@ -44,8 +44,8 @@ scheduler:
 
 evaluation:
   metrics:
-  - type: vqa_accuracy
-    key: vqa_accuracy
+  - type: accuracy
+    key: accuracy
   - type: topk_accuracy
     key: topk_accuracy
     params:
@@ -57,8 +57,9 @@ training:
   lr_scheduler: true
   # Don't forget to update schedule_attributes if you update this
   max_updates: 60000
+  evaluation_interval: 5000
   early_stop:
-    criteria: vqa2/vqa_accuracy
+    criteria: vqa2/accuracy
     minimize: false
 
 # checkpoint:

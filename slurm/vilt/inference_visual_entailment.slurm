@@ -9,11 +9,12 @@ source ~/.bashrc
 source activate mmf
 
 mmf_predict config=projects/xtransform/configs_vilt/visual_entailment/defaults.yaml \
-       run_type=test \
+       run_type=val \
        dataset=visual_entailment \
        model=vilt \
        checkpint.resume_file=save/vilt/visual_entailment/best.ckpt \
        env.save_dir=save/vilt/visual_entailment \
+       env.log_dir=save/vilt/visual_entailment \
        env.data_dir=/fsx-labs/thwjoy/mmf/data
         
 

@@ -9,10 +9,10 @@ source ~/.bashrc
 source activate mmf
 
 mmf_predict config=projects/xtransform/configs_uniter/visual_entailment.yaml \
-        run_type=test \
+        run_type=val \
         dataset=visual_entailment \
         model=uniter \
-        checkpoint.resume_zoo=save/uniter/visual_entailment/best.ckpt \
+        checkpoint.resume_file=save/uniter/visual_entailment/best.ckpt \
         env.save_dir=save/uniter/visual_entailment \
         env.data_dir=/fsx-labs/thwjoy/mmf/data
 

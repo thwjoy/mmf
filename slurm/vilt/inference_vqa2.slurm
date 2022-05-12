@@ -14,4 +14,5 @@ mmf_predict config=projects/xtransform/configs_vilt/vqa2/defaults.yaml \
        model=vilt \
        checkpint.resume_file=save/vilt/vqa2/best.ckpt \
        env.save_dir=save/vilt/vqa2 \
+       env.log_dir=save/vilt/vqa2 \
        env.data_dir=/fsx-labs/thwjoy/mmf/data

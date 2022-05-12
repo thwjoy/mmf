@@ -9,7 +9,7 @@ source ~/.bashrc
 source activate mmf
 
 mmf_predict config=projects/xtransform/configs_uniter/hateful_memes.yaml \
-        run_type=test \
+        run_type=val \
         dataset=hateful_memes \
         model=uniter \
         checkpoint.resume_file=save/uniter/hateful_memes/best.ckpt \

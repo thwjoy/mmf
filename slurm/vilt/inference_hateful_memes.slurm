@@ -9,10 +9,11 @@ source ~/.bashrc
 source activate mmf
 
 mmf_predict config=projects/xtransform/configs_vilt/hateful_memes/defaults.yaml \
-       run_type=test \
+       run_type=val \
        dataset=hateful_memes \
        model=vilt \
-       checkpint.resume_file=save/vilt/hateful_memes/best.ckpt \
+       checkpoint.resume_file=save/vilt/hateful_memes/best.ckpt \
        env.save_dir=save/vilt/hateful_memes \
+       env.log_dir=save/vilt/hateful_memes \
        env.data_dir=/fsx-labs/thwjoy/mmf/data \
        training.find_unused_parameters=true
